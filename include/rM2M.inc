@@ -50,6 +50,135 @@ const
 
 /**
  * <summary>
+ *   Type identifier for Position update entries.
+ * </summary>
+ */
+const
+{
+  RM2M_POSUPDATE_TYPE_ERR  = 0,
+  RM2M_POSUPDATE_TYPE_GSM  = 1,
+  RM2M_POSUPDATE_TYPE_UMTS = 2,
+  RM2M_POSUPDATE_TYPE_LTE  = 3,
+  RM2M_POSUPDATE_TYPE_WIFI = 4,
+}
+
+/**
+ * <summary>
+ *   GSM position update structure.
+ * </summary>
+ * <param name="type">
+ *   type field indicating GSM position update entry (RM2M_POSUPDATE_TYPE_GSM)
+ * </param>
+ * <param name="stamp">
+ *   Timestamp for this entry
+ * </param>
+ * <param name="mcc">
+ *   Mobile Country Code
+ * </param>
+ * <param name="mnc">
+ *   Mobile Network Code
+ * </param>
+ * <param name="lac">
+ *   Location Area Code
+ * </param>
+ * <param name="cid">
+ *   Cell ID (16-bit)
+ * </param>
+ * <param name="rssi">
+ *   Received Signal Strength Indicator [dBm] 
+ * </param>
+ * <param name="ta">
+ *   Timing Advance parameter
+ * </param>
+ */
+#define TrM2M_PosUpdateGSM [.type, .stamp, .mcc, .mnc, .lac, .cid, .rssi, .ta]
+
+/**
+ * <summary>
+ *   UMTS position update structure.
+ * </summary>
+ * <param name="type">
+ *   Type field indicating UMTS position update entry (RM2M_POSUPDATE_TYPE_UMTS)
+ * </param>
+ * <param name="stamp">
+ *   Timestamp for this entry
+ * </param>
+ * <param name="mcc">
+ *   Mobile Country Code
+ * </param>
+ * <param name="mnc">
+ *   Mobile Network Code
+ * </param>
+ * <param name="lac">
+ *   Location Area Code
+ * </param>
+ * <param name="cid">
+ *   UTRAN Cell ID
+ * </param>
+ * <param name="rscp">
+ *   Received Signal Code Power [dBm] 
+ * </param>
+ * <param name="pscr">
+ *   Primary scrambling code
+ * </param>
+ */
+#define TrM2M_PosUpdateUMTS [.type, .stamp, .mcc, .mnc, .lac, .cid, .rscp, .pscr]
+
+/**
+ * <summary>
+ *   LTE position update structure.
+ * </summary>
+ * <param name="type">
+ *   Type field indicating LTE position update entry (RM2M_POSUPDATE_TYPE_LTE)
+ * </param>
+ * <param name="stamp">
+ *   Timestamp for this entry
+ * </param>
+ * <param name="mcc">
+ *   Mobile Country Code
+ * </param>
+ * <param name="mnc">
+ *   Mobile Network Code
+ * </param>
+ * <param name="lac">
+ *   Location Area Code
+ * </param>
+ * <param name="cid">
+ *   E-UTRAN Cell ID
+ * </param>
+ * <param name="rsrp">
+ *   Reference Signal Received Power [dBm] 
+ * </param>
+ */
+#define TrM2M_PosUpdateLTE [.type, .stamp, .mcc, .mnc, .lac, .cid, .rsrp]
+
+/**
+ * <summary>
+ *   WIFi position update structure.
+ * </summary>
+ * <param name="type">
+ *   Type field indicating WiFi position update entry (RM2M_POSUPDATE_TYPE_WIFI)
+ * </param>
+ * <param name="stamp">
+ *   Timestamp for this entry
+ * </param>
+ * <param name="ch">
+ *   WiFi RF channel (1-14, 2.4 GHz range), u8
+ * </param>
+ * <param name="rssi">
+ *   WiFi RSSI level [dBm], s8
+ * </param>
+ * <param name="bssid">
+ *   Basic Service Set Identification (i.e. Access point MAC address)
+ * </param>
+ * <param name="ssid">
+ *   Service Set Identifier
+ * </param>
+ */
+#define TrM2M_PosUpdateWiFi [.type, .stamp, .ch, .rssi, .bssid{6}, .ssid{32+1}]
+
+/**
+ * <summary>
  *   States for managed SIM
  * </summary>
  */
@@ -753,6 +882,7 @@ const
   RM2M_TX_SERVICE            = 0b00000010, // service connection
   RM2M_TX_REFRESH_CONFIG     = 0b00000100, // refresh configuration
   RM2M_TX_SUPPRESS_POSUPDATE = 0b00001000, // suppress position update
+  RM2M_TX_POSUPDATE_ONLY     = 0b00010000, // position update only (no server sync)
 };
 
 /**
@@ -834,15 +964,16 @@ native rM2M_TxSetMode(mode, flags=0);
  */
 const
 {
-  RM2M_TX_FAILED         = 0b000000001, // failed connection
-  RM2M_TX_ACTIVE         = 0b000000010, // active connection
-  RM2M_TX_STARTED        = 0b000000100, // started connection
-  RM2M_TX_RETRY          = 0b000001000, // automatic connection retry in progress
-  RM2M_TX_WAKEUPABLE     = 0b000010000, // connection in wakeupable state
-  RM2M_TX_EXTSIM         = 0b000100000, // external SIM active
-  RM2M_TX_DISABLED       = 0b001000000, // modem is disabled
-  RM2M_TX_SERVICE_ACTIVE = 0b010000000, // service connection is active
-  RM2M_TX_WAKEUP         = 0b100000000, // connection triggered from wakeup SMS
+  RM2M_TX_FAILED           = 0b0000000001, // failed connection
+  RM2M_TX_ACTIVE           = 0b0000000010, // active connection
+  RM2M_TX_STARTED          = 0b0000000100, // started connection
+  RM2M_TX_RETRY            = 0b0000001000, // automatic connection retry in progress
+  RM2M_TX_WAKEUPABLE       = 0b0000010000, // connection in wakeupable state
+  RM2M_TX_EXTSIM           = 0b0000100000, // external SIM active
+  RM2M_TX_DISABLED         = 0b0001000000, // modem is disabled
+  RM2M_TX_SERVICE_ACTIVE   = 0b0010000000, // service connection is active
+  RM2M_TX_WAKEUP           = 0b0100000000, // connection triggered from wakeup SMS
+  RM2M_TX_POSUPDATE_ACTIVE = 0b1000000000, // position update is active
 };
 
 /**
@@ -910,6 +1041,26 @@ const
   RM2M_TXERR_WIFI_TCP_SEND_TO,          // timeout sending data
   RM2M_TXERR_WIFI_TCP_CONNECT,          // error connecting to server
   RM2M_TXERR_WIFI_TCP_FAILED,           // other error concerning TCP connection */
+
+  /**< General Ethernet errors */
+  RM2M_TXERR_ETH = 300,                 // unspecified Ethernet error
+  RM2M_TXERR_ETH_TIMEOUT,               // timeout Ethernet communication
+  RM2M_TXERR_ETH_INIT,                  // error during init
+  RM2M_TXERR_ETH_IO,                    // error IO communication
+  RM2M_TXERR_ETH_INIT_MAC_PHY,          // error initializing MAC/PHY interface
+  RM2M_TXERR_ETH_ITF_UP,                // TCP/IP stack: error bringing itf up (including dhcp)
+
+  /**< Network related Ethernet errors */
+  RM2M_TXERR_ETH_NETWORK = 320,
+  RM2M_TXERR_ETH_NETWORK_TIMEOUT,       // timeout accessing network
+  RM2M_TXERR_ETH_DHCP_TIMEOUT,          // timeout receiving IP address from DHCP server
+
+  /**< TCP related Ethernet errors */
+  RM2M_TXERR_ETH_TCP = 340,
+  RM2M_TXERR_ETH_TCP_OPEN_TIMEOUT,      // timeout opening TCP connection
+  RM2M_TXERR_ETH_TCP_SEND_TIMEOUT,      // timeout sending data
+  RM2M_TXERR_ETH_TCP_CONNECT,           // error connecting to server
+  RM2M_TXERR_ETH_TCP_FAILED,            // other error concerning TCP connection
 };
 
 /**
@@ -1033,7 +1184,7 @@ native rM2M_RecData(timestamp, const data{}, len);
  *
  * <returns>
  *   <em>OK</em> if successful, otherwise values &lt; <em>OK</em>.
- *   <em>ERROR</em> if any error occured (e.g. LIVE mode not activated).
+ *   <em>ERROR</em> if any error occured (e.g. Server does not support live data).
  * </returns>
  */
 native rM2M_LiveData(const data{}, len);
@@ -1809,6 +1960,60 @@ native rM2M_SetPosNMEA(const Sentence{});
  * </returns>
  */
 native rM2M_GetPos(&Lat, &Long, &Elev, &Qual=0, &SatUsed=0);
+
+/**
+ * <summary>
+ *   Enumerate position update entries stored in the device.
+ *   This function uses variable parameters depending on the usage.
+ *   Following usage is possible:
+ *     1. Read the number of available entries
+ *        {
+ *          new nEnum;
+ *
+ *          rM2M_EnumPosUpdate(nEnum);
+ *        }
+ *     2. Read type information of the enumerated entries
+ *        {
+ *          new type;
+ *          new idxEnum = 0;
+ *
+ *          for(idxEnum=0 ; idxEnum < nEnum ; idxEnum++)
+ *            rM2M_EnumPosUpdate(idxEnum, type);
+ *        }
+ *     3. Read data based on the detected type
+ *        {
+ *          new sGSMPos[TrM2M_PosUpdateGSM];
+ *
+ *          if(type == RM2M_POSUPDATE_TYPE_GSM)
+ *            rM2M_EnumPosUpdate(idxEnum, sGSMPos, sizeof sGSMPos);
+ *        }
+ * </summary>
+ *
+ * <param name="nEnum">
+ *   This parameter will hold the number of available entries.
+ * </param>
+ * <param name="idxEnum">
+ *   Position Update enumerator
+ *   Get data for this entry (additional parameter <em>type</em> or
+ *   <em>buf</em> and <em>len</em> required).
+ * </param>
+ * <param name="type">
+ *   This parameter will hold the type information of the enumerated entry
+ *   (see RM2M_POSUPDATE_TYPE_xxx definitions).
+ * </param>
+ * <param name="buf">
+ *   Destination buffer where position information is filled in.
+ *   Data structure depends on the type of the entry (see <em>TrM2M_PosUpdate_xxx</em> structures).
+ * </param>
+ * <param name="len">
+ *   Length of the destination buffer (number of cells).
+ * </param>
+ *
+ * <returns>
+ *   <em>OK</em> if successful, otherwise <em>ERROR</em>.
+ * </returns>
+ */
+native rM2M_EnumPosUpdate(...);
 
 /**
  * <summary>
