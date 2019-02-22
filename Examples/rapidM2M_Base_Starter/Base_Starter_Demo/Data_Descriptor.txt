@@ -1,0 +1,271 @@
+﻿//===
+//=== Basic Configuration
+//===
+<table>
+    // Configuration block 0 should be used
+    name  = config0                         
+    // Title of the config. section displayed on the server
+    title = Basic Configuration    
+   
+    //=== Configuration Parameter: Record Interval	
+    <field>
+        // Parameter 0 should be used for the record interval
+        name       = field0             
+        // Alternative field name that can be used by the REST-API
+        alias      = RecordInterval     
+        // Title of the parameter displayed on the server
+        title      = Record Interval    
+        // Position in config block 0 where the parameter is saved
+        byteofs    = 0                  
+        // No decimal places
+        decpl      = 0                  
+        // Data type: 32Bit unsigned
+        type       = u32 
+        // Unit to be used to enter the value for the parameter               
+        units      = sec  
+        // Lowest valid value for the parameter            
+        min        = 1                  
+        // Default value is 60 sec.
+        default    = 60                      
+    </field>
+	
+    //=== Configuration Parameter: Transmission Interval
+    <field>
+        // Parameter 1 should be used for the transmission interval
+        name       = field1            
+        alias      = TransmissionInterval
+        title      = Transmission Interval
+        byteofs    = 4                  
+        decpl      = 0
+        type       = u32
+        units      = min
+        min        = 10
+        default    = 60
+        // Conversion factor sec.->min. (sec. used internally)                 
+        vscale     = 0.01666666667      
+    </field>
+	
+	//=== Configuration Parameter: Transmission Mode 
+    <field>
+        // Parameter 2 should be used for the connection type
+        name       = field2             
+        alias      = TransmissionMode
+        title      = Transmission Mode
+        byteofs    = 8                  
+        decpl      = 0
+        type       = u8
+        default    = 0
+        // Selection options for the drop-down list
+        editmask   = 0=Interval;1=Wakeup;2=Online 
+    </field>
+</table>
+
+//===
+//=== Air Humidity Configuration
+//===
+<table>
+    // Configuration block 1 should be used
+    name  = config1                         
+    // Title of the config. section displayed on the server
+    title = Air Humidity Configuration  
+   
+    //=== Configuration Parameter: Warning threshold
+    <field>
+        // Parameter 0 should be used for the warning threshold
+        name       = field0             
+        alias      = WarningThreshold     
+        title      = Warning Threshold    
+        byteofs    = 0                  
+        decpl      = 1                  
+        type       = s16             
+        units      = %          
+        min        = 1
+	// Highest valid value for the parameter 
+	max        = 100
+	// Conversion factor i.e. 385 -> 38.5 (0.1% is used internally)			
+        vscale     = 0.1
+	default    = 30			
+    </field>
+	
+    //=== Configuration Parameter: Alerting threshold
+    <field>
+        // Parameter 1 should be used for the alerting threshold
+        name       = field1             
+        alias      = AlertingThreshold     
+        title      = Alerting Threshold    
+        byteofs    = 2                  
+        decpl      = 1                  
+        type       = s16             
+        units      = %          
+        min        = 1
+	    max        = 100
+        // Conversion factor i.e. 385 -> 38.5 (0.1% is used internally)			
+        vscale     = 0.1 
+	    default    = 40			
+    </field>	  
+</table>
+
+//===
+//=== Accelerometer Configuration
+//===
+<table>
+    // Configuration block 2 should be used
+    name  = config2                         
+    // Title of the config. section displayed on the server
+    title = Accelerometer Configuration  
+   
+    //=== Configuration Parameter: Threshold Up
+    <field>
+        // Parameter 0 should be used for the Threshold Up
+        name       = field0             
+        alias      = ThresholdUp     
+        title      = Threshold Up   
+        byteofs    = 0                  
+        decpl      = 0                  
+        type       = s16             
+        units      = °          
+        min        = 0
+	max	   = 180
+	default    = 45			
+    </field>
+	
+    //=== Configuration Parameter: Threshold Down
+    <field>
+        // Parameter 1 should be used for the Threshold Down
+        name       = field1             
+        alias      = ThresholdDown    
+        title      = Threshold Down   
+        byteofs    = 2                  
+        decpl      = 0                  
+        type       = s16             
+        units      = °          
+        min        = -180
+	max	   = 0
+	default    = -45			
+    </field>	  
+</table>
+
+
+//===
+//=== Measurement Channels
+//===
+<split>
+    // Raw data channel (always "rm2mraw" for the base partner board) from which the data records should be
+    //copied
+    source = rm2mraw
+    // Measurement data channel to which the data record should be copied
+    target = histdata0
+    // If the first byte of the data record corresponds to this value, it is copied to the specified 
+    // measurement data channel.
+    key    = 00
+</split>
+
+<table>
+    // Measurement data channel 0 should be used.
+    name = histdata0
+
+    //=== Measurement Channel: 
+    <field>
+        // Data field 0 should be used for the temperature of the SHT31
+        name    = ch0
+        //Alternative field name that can be used by the REST-API
+        alias   = Temperature
+	    // Title of the data field i.e temperature displayed on the server
+        title   = Temperature
+        // Position in measurement data channel 0 where the data field is saved
+        // Note: The key for the split tag is located at position "0"
+        byteofs = 1
+	    // Two decimal places
+        decpl   = 2
+        // Data type: 16Bit signed
+        type    = s16
+         // Conversion factor i.e. 385 -> 3.85 (0.01°C is used internally)		
+        vscale  = 0.01
+        //Measurement value unit displayed on the server
+        units   = °C	
+    </field>
+    
+     <field>
+        // Data field 1 should be used for the humidity of the SHT31
+        name    = ch1
+        alias   = Humidity
+        title   = Humidity
+        byteofs = 3
+        decpl   = 1
+        type    = s16
+        // Conversion factor i.e. 385 -> 38.5 (0.1% is used internally)			
+        vscale  = 0.1 
+        units   = %	
+    </field>
+    
+     <field>
+        // Data field 2 should be used for the battery voltage
+        name    = ch2
+        alias   = BatVoltage
+        title   = Battery Voltage
+        byteofs = 5
+        decpl   = 2
+        type    = s16
+        //Conversion factor mV->V (mV is used internally)	
+        vscale  = 0.001
+        units   = V	
+    </field>
+    
+     <field>
+        // Data field 3 should be used for the input voltage
+        name    = ch3
+        alias   = InputVoltage
+        title   = Input Voltage
+        byteofs = 7
+        decpl   = 2
+        type    = s16
+        //Conversion factor mV->V (mV is used internally)	
+        vscale  = 0.001
+        units   = V	
+    </field>	
+	
+     <field>
+        // Data field 4 should be used for the counter value
+        name    = ch4
+        alias   = counter
+        title   = Counter
+        byteofs = 9
+        decpl   = 0
+        type    = u16
+    </field>
+    
+    <field>
+        // Data field 5 should be used for the x angle of accelerometer
+        name    = ch5
+        alias   = Angle_X_Axis
+        title   = Angle x Axis 
+        byteofs = 11
+	    decpl   = 0
+        type    = s16
+        units   = deg  		
+    </field>
+    
+    <field>
+        // Data field 6 should be used for the y angle of accelerometer
+        name    = ch6
+        alias   = Angle_Y_Axis
+        title   = Angle y Axis 
+        byteofs = 13
+        decpl   = 0
+        type    = s16
+        units   = deg  		
+    </field>
+        
+    <field>
+        // Data field 7 should be used for the z angle of accelerometer
+        name    = ch7
+        alias   = Angle_Z_Axis
+        title   = Angle z Axis
+        byteofs = 15
+        decpl   = 0
+        type    = s16
+        units   = deg  		
+    </field>  
+    
+
+ </table>
