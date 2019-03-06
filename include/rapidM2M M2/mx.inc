@@ -19,6 +19,22 @@
 
 /**
  * <summary>
+ *   Available GPIOs.
+ * </summary>
+ */
+const
+{
+  GPIO_0 = 0,               
+  GPIO_1,
+  GPIO_2,
+  GPIO_3,
+  GPIO_4,
+  GPIO_5,
+  GPIO_NUM,
+};
+
+/**
+ * <summary>
  *   Led Modes.
  * </summary>
  */
