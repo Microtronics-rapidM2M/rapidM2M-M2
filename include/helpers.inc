@@ -254,3 +254,11 @@ native CalcTable(key, &value, const table[][TablePoint], size = sizeof table);
  * </returns>
  */
 native CalcTableF(Float:key, &Float:value, const table[][TablePointF], size = sizeof table);
+
+/**
+ * <summary>
+ *   Returns a random number if successful, or <em>ERROR</em> if random number
+ *   generator is not available.
+ * </summary>
+ */
+native rand();
