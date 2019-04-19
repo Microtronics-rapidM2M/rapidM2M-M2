@@ -23,8 +23,10 @@ const
   PIN_LED1_B = 3,                                                 // RGB LED 1: Blue
   PIN_LED3   = 4,                                                 // LED 3: Green
   PIN_ACC_CS = 5,                                                 // CS signal accelerometer
-  CNT_RESET_TIME     = 5000,                                      // Time (ms) for which the button must be pressed to reset
-                                                                  // the counter 
+  IRQ_KEY    = 0,                                                 // IRQ for the key
+  PORT_I2C   = 0,                                                 // I2C Port used for communication with Temperature/Humidity sensor
+  CNT_RESET_TIME     = 5000,                                      // Time (ms) for which the button must be pressed to start
+                                                                  // a connection 
 };
 
 
@@ -109,7 +111,6 @@ static iTxTimer;                             // Sec. until the next transmission
 /* init states */
 const
 {
-  DEFAULT_COLOR      = 0x00E20074,          // LED colour
   INIT_START = 0,
   INIT_TEMP_RH_WAIT,
   INIT_TEMP_RH,
@@ -128,13 +129,14 @@ main()
   /* Initialisation of application specific memory blocks                                    */
   PipApp_Init();
   
-  /* Initialisation of the button -> Evaluation by the script activated  
-     - Determining the function index that should be called up when releasing the button
-     - Transferring the index to the system and informing it that the button is controlled by the script
+  /* Initialisation of the interrupt input used for the button.
+     - Determining the function index that should be called up when pressing the button
+     - Transferring the index to the system and informing it that an interrupt should
+       accrue on a falling edge (i.e. button pressed)
      - Index and return value of the init function are issued by the console                */
   iIdx = funcidx("KeyChanged");                        
-  iResult = rM2M_IrqInit(0, RM2M_IRQ_FALLING, iIdx);  
-  printf("Switch_Init(%d) = %d\r\n", iIdx, iResult);
+  iResult = rM2M_IrqInit(IRQ_KEY, RM2M_IRQ_FALLING, iIdx);  
+  printf("rM2M_IrqInit(%d) = %d\r\n", iIdx, iResult);
   
   /* Initialisation of a 1 sec. timer used for the general program sequence
      - Determining the function index that should be executed 1x per sec.
@@ -233,16 +235,16 @@ InitHandler()
   else if(sPoC_Vars.init == INIT_TEMP_RH)
   {
     /* init I2C #0 with 400kHz clock */
-    iResult = rM2M_I2cInit(0, 400000, 0);
+    iResult = rM2M_I2cInit(PORT_I2C, 400000, 0);
     
     /* init SHT31 (Temp and RH measurement) */
-    iResult = SHT31_Init(hTempRh, 0, SHT31_I2C_ADR_A);
+    iResult = SHT31_Init(hTempRh, PORT_I2C, SHT31_I2C_ADR_A);
     if(iResult >= OK)
       printf("SHT31 OK\r\n");
     else
       printf("SHT31_Init() = %d\r\n", iResult);
 
-    rM2M_I2cClose(0);
+    rM2M_I2cClose(PORT_I2C);
     
     /* Note:
      * 50ms delay without I2C communication is required after SHT31_Init (SoftReset) */
@@ -252,14 +254,14 @@ InitHandler()
   else if(sPoC_Vars.init == INIT_TEMP_RH_WAIT)
   {
     /* init I2C #0 with 400kHz clock */
-    iResult = rM2M_I2cInit(0, 400000, 0);
+    iResult = rM2M_I2cInit(PORT_I2C, 400000, 0);
     
     /* trigger measurement: periodic 1 mps, medium repeatability */
     iResult = SHT31_TriggerMeasurement(hTempRh, SHT31_CMD_MEAS_PERI_1_H);
     if(iResult < OK)
       printf("SHT31_TriggerMeasurement failed with %d\r\n", iResult);
 
-    rM2M_I2cClose(0);
+    rM2M_I2cClose(PORT_I2C);
 
     /* proceed with init */
     iTimeout = 1;
@@ -343,7 +345,7 @@ Handle_SHT31()
   new iTemp, iRh;
 
   /* init I2C #0 with 400kHz clock */
-  rM2M_I2cInit(0, 400000, 0);
+  rM2M_I2cInit(PORT_I2C, 400000, 0);
  
   iResult = SHT31_ReadMeasurement(hTempRh, iTemp, iRh);
 
@@ -357,7 +359,7 @@ Handle_SHT31()
     /* NOTE: probably NACK received indicating that no measurement data is present.      */
     printf("SHT31_ReadMeasurement failed with %d\r\n", iResult);
   }
-  rM2M_I2cClose(0);
+  rM2M_I2cClose(PORT_I2C);
   
   /* If iHumidity is less than 300 (i.e. 30.0) then only LED1 green state should be high */
   if(iHumidity<iHumidity_Warn){
@@ -455,7 +457,7 @@ public KeyChanged(iKeyState)
 {
   
   new iIdx,iResult;
-  iResult = rM2M_IrqClose(0);
+  iResult = rM2M_IrqClose(IRQ_KEY);
   if(iResult < OK)
     printf("[KEY] rM2M_IrqClose(0)=%d\r\n", iResult);
 
@@ -468,17 +470,17 @@ public KeyChanged(iKeyState)
     - Determining the function index that should be called up when the timer expires
     - Transferring the index to the system                                                             */
     iIdx=funcidx("KeyChanged");
-    iResult = rM2M_IrqInit(0,RM2M_IRQ_RISING,iIdx);
+    iResult = rM2M_IrqInit(IRQ_KEY, RM2M_IRQ_RISING,iIdx);
     if(iResult < OK)
       printf("[KEY] rM2M_IrqInit(%d)=%d\r\n", iIdx, iResult);
 
     iIdx = funcidx("KeyDetectLong");
     rM2M_TimerAddExt(iIdx, false, CNT_RESET_TIME);
   }
-   else                                      // Otherwise -> If the button has been released ->
+  else                                      // Otherwise -> If the button has been released ->
   {
     iIdx=funcidx("KeyChanged");
-    iResult = rM2M_IrqInit(0,RM2M_IRQ_FALLING,iIdx);
+    iResult = rM2M_IrqInit(IRQ_KEY, RM2M_IRQ_FALLING,iIdx);
     if(iResult < OK)
       printf("[KEY] rM2M_IrqInit(%d)=%d\r\n", iIdx, iResult);
       
