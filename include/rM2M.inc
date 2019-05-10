@@ -198,6 +198,20 @@ const
  */
 #define TrM2M_GSMInfo[.cgmi{20}, .cgmm{20}, .cgmr{20}, .imei{16}, .imsi{16}, .iccid{21}, .mcc, .mnc, .simstate]
 
+
+/**
+ * <summary>
+ *   Tags for Module Firmware Updates (TLV organized, tag-length-value)
+ * </summary>
+ */
+const
+{
+  RM2M_MODFW_TAG_BIN  = 0x0042494E,     /* "BIN" */
+  RM2M_MODFW_TAG_INFO = 0x494E464F,     /* "INFO" */
+  RM2M_MODFW_TAG_CRC  = 0x00435243,     /* "CRC" */
+  RM2M_MODFW_TAG_SIG  = 0x00534947,     /* "SIG" */
+}
+
 /**
  * <summary>
  *   Retrieve identification of module.
@@ -2114,3 +2128,100 @@ native rM2M_SetExtSimCfg(cfg[TrM2M_SIMCfg], len=sizeof cfg);
  */
 native rM2M_GetExtSimCfg(cfg[TrM2M_SIMCfg]=0, len=sizeof cfg);
 
+/**
+ * <summary>
+ *   Get Identification String for the installed module firmware
+ *   (stored within Registry RM2M_REG_SYS_OTP).
+ * </summary>
+ *
+ * <param name="handle">
+ *   Handle for identifying the module firmware.
+ * </param>
+ * <param name="id">
+ *   Buffer where identification is filled in (String).
+ * </param>
+ * <param name="maxlen">
+ *   length of id buffer, number of cells
+ * </param>
+ *
+ * <returns>
+ *   <em>OK</em> if successful, otherwise <em>ERROR</em> or any dedicated
+ *   Registry Error (see RM2M_REG_ERROR_xxx definitions).
+ * </returns>
+ */
+native rM2M_ModFwGetId(handle, id{}, maxlen=sizeof(id));
+
+/**
+ * <summary>
+ *   Read Tag information for the available module firmware update.
+ *   Function is non-blocking, finished if callback function
+ *   (see param <em>funcidx</em>) is executed.
+ *
+ *   NOTE:
+ *   Module Firmware Updates are TLV (tag-length-value) structured. This structure is
+ *   used to provide additional information (Meta Data) for the firmware update.
+ *   Tag <em>RM2M_MODFW_TAG_BIN</em> is mandatory and holds the binary firmware image.
+ *   Tag <em>RM2M_MODFW_TAG_INFO</em> is mandatory and holds a string
+ *   identifying the firmware image (Name, Version, etc.).
+ *   Tags <em>RM2M_MODFW_TAG_CRC</em> and <em>RM2M_MODFW_TAG_SIG</em> are prepared
+ *   for custom usage and intended to verify the firmware update.
+ *   Verification itself must be handled within script.
+ *   Any other tags are possible for custom usage.
+ * </summary>
+ *
+ * <param name="handle">
+ *   Handle for identifying the module firmware.
+ * </param>
+ * <param name="tag">
+ *   Selected Tag to search for.
+ * </param>
+ * <param name="funcidx">
+ *   Has to be of type: public func(result);
+ *   Index of the callback function that is executed if operation has finished.
+ *   If <em>buflen</em> is zero, <em>result</em> will hold the length field of the
+ *   selected tag, otherwise <em>result</em> will hold the number of read bytes.
+ *   <em>result</em> will hold <em>ERROR</em> if any error occured.
+ * </param>
+ * <param name="buf">
+ *   buffer holding response data
+ *   Note: buffer must be static or public
+ * </param>
+ * <param name="buflen">
+ *   size of the response buffer, number of cells
+ *   NOTE: if <em>buflen</em> is zero, the length field of the selected tag will be
+ *   provided to the callback funtion.
+ * </param>
+ * <param name="ofs">
+ *   Byte Offset within value field
+ * </param>
+ *
+ * <returns>
+ *   <em>OK</em> if read operation was started successfully, <em>ERROR-1</em> if 
+ *   operation is temporary not possible (Busy, try later), or <em>ERROR</em> if
+ *   any other error occured (e.g. update not available).
+ * </returns>
+ */
+native rM2M_ModFwReadTag(handle, tag, funcidx, buf{}, buflen=sizeof buf, ofs=0);
+
+/**
+ * <summary>
+ *   Install Module Firmware Update
+ *
+ *   NOTE: 
+ *   This function must be handled with care, because normal System Operation
+ *   (Script Execution, Server Uplink, Local Interfaces, etc.) will be aborted
+ *   before installing the update.
+ *   A full System Reset is performed after finishing update process.
+ * </summary>
+ *
+ * <param name="handle">
+ *   Handle for identifying the module firmware.
+ * </param>
+ *
+ * <returns>
+ *   <em>OK</em> if read operation was started successfully, <em>ERROR-1</em> if 
+ *   operation is temporary not possible (Busy, try later), or <em>ERROR</em> if
+ *   any other error occured (e.g. update not available).
+ * </returns>
+ */
+native rM2M_ModFwInstall(handle);
