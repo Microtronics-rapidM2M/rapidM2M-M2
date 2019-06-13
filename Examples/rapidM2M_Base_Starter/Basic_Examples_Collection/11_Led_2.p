@@ -55,7 +55,7 @@ main()
     printf("rM2M_TimerAddExt(%d) = %d\r\n", iIdx, iResult);
 
 	
-  /* Sets signal direction for GPIOs used to control LEDs to "Output" and turn off all LEDs */
+  /* Sets signal direction for GPIOs used to control LEDs to "Output" and turns off all LEDs */
   /* Note: It is recommended to set the desired output level of a GPIO before setting the 
            signal direction for the GPIO.                                                     */
   rM2M_GpioSet(PIN_LED1_R, LED_DISABLE);	   // Sets the output level of the GPIO to "low"( LED 1: Red is off)
@@ -73,7 +73,7 @@ main()
 /* 1 sec. timer is used for the general program sequence */
 public MainTimer()
 {  
-  if(iLedState)								// If LED 2 is currently on ->
+  if(iLedState)								// If LED 2 is currently "On" ->
   { 
     rM2M_GpioSet(PIN_LED2, LED_DISABLE);    // Turns off LED 2
     printf("[LED] off\r\n");

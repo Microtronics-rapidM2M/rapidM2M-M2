@@ -15,9 +15,9 @@
  *
  * If the button was pressed ("low" signal level) "[KEY] Key pressed" is issued via the console.
  * If the button was pressed and held for a longer time "[KEY] Long Push Detected" is issued via the console.
- * If the button was released after it has been pressed and held for a longer time "[KEY] Long key detected 
+ * If the button was released after it had been pressed and held for a longer time "[KEY] Long key detected 
  * and key released" is issued via the console.
- * If the button was released after it has been pressed briefly ("high" signal level) "[KEY] Key released" 
+ * If the button was released after it had been pressed briefly ("high" signal level) "[KEY] Key released" 
  * is issued via the console.
  * 
  * Only compatible with rapidM2M M2xx
@@ -114,7 +114,7 @@ public KeyChanged(iKeyState)
     if(iResult < OK)
       printf("[KEY] rM2M_IrqInit(%d)=%d\r\n", iIdx, iResult);
       
-    if(iLongPushDetected)                   // If the button has been pressed for a long time ->
+    if(iLongPushDetected)                   // If the button had been pressed for a long time ->
     {
       // Prints "[KEY] Long key detected and key released" to the console
       printf("[KEY] Long key detected and key released\r\n");  

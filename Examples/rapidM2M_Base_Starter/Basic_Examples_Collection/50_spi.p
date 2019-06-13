@@ -74,7 +74,7 @@ main()
 	 point for the  purpose of a better understanding.                                        */
   iStateInit = INIT_START;                       // Sets the state of the init process to "Initialization started"
 	
-  InitHandler();                                 // Starts the initialisation handler.
+  InitHandler();                                 // Starts the initialisation handler
 }
 
 /* Single shot ms timer to initialise the SPI interface and the accelerometer
@@ -97,7 +97,7 @@ InitHandler()
 
   if(iStateInit == INIT_START)                   // If the state of the init process is "Initialization started" ->
   {
-    /* Sets signal direction for GPIOs used to control LEDs to "Output" and turn off all LEDs
+    /* Sets signal direction for GPIOs used to control LEDs to "Output" and turns off all LEDs
        Note: It is recommended to set the desired output level of a GPIO before setting the 
              signal direction for the GPIO.                                                     */
     rM2M_GpioSet(PIN_LED1_R, LED_DISABLE);	     // Sets the output level of the GPIO to "low"( LED 1: Red is off)

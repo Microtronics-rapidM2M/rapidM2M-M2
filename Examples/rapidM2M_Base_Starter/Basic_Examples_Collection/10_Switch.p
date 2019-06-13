@@ -85,7 +85,7 @@ public KeyChanged(iKeyState)
     
     printf("[KEY] Key pressed\r\n");		// Prints "[KEY] Key pressed" to the console
   }
-  else                                      // Otherwise -> If the button has been released ->
+  else                                      // Otherwise -> If the button was released ->
   {
     /* Activates the interrupt functionality of the input used for the button again and issues the result of  
      the init function via the console. An interrupt should occur on a falling edge (i.e. button pressed) */   

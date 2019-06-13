@@ -89,7 +89,7 @@ public TimerInit()
    calls it up again.                                                                           */  
 InitHandler()
 {
-  new iTimeout = 0;                              // Interval of the timer used for the in initialisation [ms] 
+  new iTimeout = 0;                              // Interval of the timer used for the initialisation [ms] 
   
   /* Temporary memory for the index of a public function and the return value of a function     */
   new iIdx;
