@@ -104,7 +104,7 @@ Click on the name of the function to view in which example it is used.
 
 <details>
 <summary>**rm2m_TimerAdd(funcidx)**</summary>
-+ 00_common_1_Timer.p 
++ 00_common_1_Timer.p<br/> 
 + 10_Switch_Long.p 
 + 11_Led_2.p 
 + 11_Led_2_3.p 
@@ -352,6 +352,7 @@ Click on the name of the function to view in which example it is used.
 <summary>**rM2M_RegSetString(reg, const name[], const string[])**</summary>
 + 12_Transmission_1_uplink.p
 </details>
+
 ### [Char & String](http://support.microtronics.com/Developer_Documentation/Content/Developer_Documentation/sw/Pawn_Erweiterungen_String_Funktionen.htm)
 
 <details>
@@ -366,6 +367,7 @@ Click on the name of the function to view in which example it is used.
 + 20_rs232_3.p
 + 20_rs232_4.p
 </details>
+
 ### [Various](http://support.microtronics.com/Developer_Documentation/Content/Developer_Documentation/sw/Pawn_Erweiterungen_Hilfsfunktionen.htm)
 
 <details>
