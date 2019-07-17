@@ -19,7 +19,7 @@
  * @version 20190508  
  */
 
-#include <rapidM2M M2\mx>
+#include ".\rapidM2M M2\mx.inc"
 
 /* Forward declarations of public functions */
 forward public Timer1s();                   // Called up 1x per sec. to read the last valid values for Vin and Vaux

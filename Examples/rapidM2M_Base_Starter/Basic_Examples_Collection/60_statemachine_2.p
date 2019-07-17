@@ -51,7 +51,7 @@ const
   LED_DISABLE = RM2M_GPIO_LOW,				// By setting the GPIO to "low" the LED is turned off  
 }
 
-// Delay before switching to the next state [sec.]
+// Possible states for the application 
 const
 {
   STATE_OFF = 0,
@@ -62,7 +62,7 @@ const
   STATE_YELLOW,
 }
 
-// Possible states for the application 
+// Delay before switching to the next state [sec.]
 const
 {
   TIMEOUT_OFF              = 1,
@@ -109,7 +109,7 @@ main()
   iResult = rM2M_TimerAdd(iIdx);
   printf("rM2M_TimerAdd(%d) = %d\r\n", iIdx, iResult);
   
-  //Init state
+  // Init state
   StateChange(STATE_OFF);                      // Calls function to set the state of the application to "STATE_OFF"
 }
 
@@ -120,7 +120,7 @@ main()
  */
 StateChange(iNewState)
 {
-  switch(iNewState)                            // Switch new state for the application   
+  switch(iNewState)                            // Switch new state for the application
   {
     case STATE_OFF:
     {
@@ -129,7 +129,7 @@ StateChange(iNewState)
       iStateGreen   = LED_DISABLE;
       iStateBlue    = LED_DISABLE;
       
-	  //Sets the counter for the remaining time until switching to the next state to "TIMEOUT_OFF"      
+      // Sets the counter for the remaining time until switching to the next state to "TIMEOUT_OFF"
       Handle_CheckWait(iTimerTimeout, TIMEOUT_OFF);
     }
     case STATE_RED:
@@ -139,7 +139,7 @@ StateChange(iNewState)
       iStateGreen   = LED_DISABLE;
       iStateBlue    = LED_DISABLE;
 
-      //Sets the counter for the remaining time until switching to the next state to "TIMEOUT_RED"      
+      // Sets the counter for the remaining time until switching to the next state to "TIMEOUT_RED"
       Handle_CheckWait(iTimerTimeout, TIMEOUT_RED);
     }
     case STATE_RED_YELLOW:
@@ -149,17 +149,17 @@ StateChange(iNewState)
       iStateGreen   = LED_ENABLE;
       iStateBlue    = LED_DISABLE;
 
-      //Sets the counter for the remaining time until switching to the next state to "TIMEOUT_RED_YELLOW"  	  
+      // Sets the counter for the remaining time until switching to the next state to "TIMEOUT_RED_YELLOW"
       Handle_CheckWait(iTimerTimeout, TIMEOUT_RED_YELLOW);
     }
     case STATE_GREEN:
     {
-	  // Sets the state of the GPIOs used to control RGB LED in such a way that the LED lights up green
+      // Sets the state of the GPIOs used to control RGB LED in such a way that the LED lights up green
       iStateRed     = LED_DISABLE;
       iStateGreen   = LED_ENABLE;
       iStateBlue    = LED_DISABLE;
 
-      //Sets the counter for the remaining time until switching to the next state to "TIMEOUT_GREEN"        
+      // Sets the counter for the remaining time until switching to the next state to "TIMEOUT_GREEN"
       Handle_CheckWait(iTimerTimeout, TIMEOUT_GREEN);
     }
     case STATE_GREEN_BLINKING:
@@ -179,7 +179,7 @@ StateChange(iNewState)
       iStateGreen   = LED_ENABLE;
       iStateBlue    = LED_DISABLE;
       
-	  //Sets the counter for the remaining time until switching to the next state to "TIMEOUT_YELLOW"        
+      // Sets the counter for the remaining time until switching to the next state to "TIMEOUT_YELLOW"
       Handle_CheckWait(iTimerTimeout, TIMEOUT_YELLOW);
     }
   }

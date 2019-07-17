@@ -8,7 +8,7 @@
  *           | |
  *           |_|
  *
- * "Indicating the Transmission state" Example
+ * Simple "Indicating the Transmission state" Example
  *
  * Initiates a connection to the server and uses LED 2 to indicate the current connection state
  * LED 2 is off 	if the device is offline (not connected) or in "Wakeup" mode
@@ -46,14 +46,14 @@ const
   PIN_LED2    = 0,                          // LED 2: Green		(GPIO0 is used)
   PIN_LED3    = 4,                          // LED 3: Green		(GPIO4 is used)
   
-  LED_ENABLE  = RM2M_GPIO_HIGH,				// By setting the GPIO to "high" the LED is turned on
-  LED_DISABLE = RM2M_GPIO_LOW,				// By setting the GPIO to "low" the LED is turned off
+  LED_ENABLE  = RM2M_GPIO_HIGH,             // By setting the GPIO to "high" the LED is turned on
+  LED_DISABLE = RM2M_GPIO_LOW,              // By setting the GPIO to "low" the LED is turned off
   
   //State that can be displayed via LED 2
-  STATE_OFF   = 0,							// Device is offline (not connected) or in "Wakeup" mode 	(LED2 off)	
+  STATE_OFF   = 0,                          // Device is offline (not connected) or in "Wakeup" mode 	(LED2 off)	
   STATE_ON,                                 // Device is connected to the server						(LED2 on)
   STATE_SLOW,                               // Connection establishment failed                          (LED2 blinking)
-  STATE_FAST,								// Connection establishment has started or 
+  STATE_FAST,                               // Connection establishment has started or 
                                             // is waiting for the next automatic retry                   (LED2 flickering)				
 };
 
@@ -113,11 +113,11 @@ main()
 
 /* 1 sec. timer is used for the general program sequence */
 public TimerMain()
-{  
-  new iTxState;								   // Temporary memory for the current connection status
+{
+  new iTxState;                                // Temporary memory for the current connection status
   static iTxStateAkt;                          // Last determined connection status 
   
-  iTxState = rM2M_TxGetStatus();               // Gets the current connection status 
+  iTxState = rM2M_TxGetStatus();               // Gets the current connection status
   if(iTxState != iTxStateAkt)                  // If the connection status has changed ->  
   {
     if(iTxState == 0)                          // If the connection is not active, has not started and is not waiting for next automatic retry 
@@ -170,8 +170,8 @@ ChangeState(iNewState)
   if(iNewState != iState)                      // If the status to be set differs from the current status ->
   {
     // Update on Next Tick
-    iTimer = 0;								   // Sets the counter used to generate the blink interval to 0 so that LED2 can be controlled 
-	                                           // on the next expiry of the 100ms
+    iTimer = 0;                                // Sets the counter used to generate the blink interval to 0 so that LED2 can be controlled 
+                                               // on the next expiry of the 100ms
     iState = iNewState;                        // Copies new status to the variable for the current state that should be displayed via LED 2 
   }
 }
@@ -182,21 +182,21 @@ public Timer100ms()
   iTimer--;                                    // Decrements the counter used to generate the blink interval for LED 2  
   if(iTimer <= 0)                              // When the counter has expired ->
   {
-    if(iState == STATE_OFF)					   // If LED 2 should be off ->	
+    if(iState == STATE_OFF)                    // If LED 2 should be off ->	
     {
       // LED off
-	  iStateGpio = LED_DISABLE;                // Sets current state of the GPIO used to control LED 2 to "LED_DISABLE"  
+      iStateGpio = LED_DISABLE;                // Sets current state of the GPIO used to control LED 2 to "LED_DISABLE"  
       iTimer = 0;                              // Sets the Counter used to generate the blink interval to 0 	  
     }
     else if (iState == STATE_ON)               // If LED 2 should light up ->
     {
       // LED on
-	  iStateGpio = LED_ENABLE;                 // Sets current state of the GPIO used to control LED 2 to "LED_ENABLE" 
+      iStateGpio = LED_ENABLE;                 // Sets current state of the GPIO used to control LED 2 to "LED_ENABLE" 
       iTimer = 0                               // Sets the Counter used to generate the blink interval to 0 
     }
     else if (iState == STATE_FAST)             // If LED 2 should flicker ->
     {
-	  // 100ms on, 100ms off
+      // 100ms on, 100ms off
       if(iStateGpio)                           // If the current state of the GPIO used to control LED 2 is "LED_ENABLE"  -> sets it to "LED_DISABLE" 
         iStateGpio = LED_DISABLE;
       else                                     // Otherwise -> sets it to "LED_ENABLE"
@@ -207,7 +207,7 @@ public Timer100ms()
     else if (iState == STATE_SLOW)             // If LED 2 should blink slowly ->
     {
       // 1 second on, 1 second off
-	  if(iStateGpio)                           // If the current state of the GPIO used to control LED 2 is "LED_ENABLE"  -> sets it to "LED_DISABLE"
+      if(iStateGpio)                           // If the current state of the GPIO used to control LED 2 is "LED_ENABLE"  -> sets it to "LED_DISABLE"
         iStateGpio = LED_DISABLE;
       else                                     // Otherwise -> sets it to "LED_ENABLE" 
         iStateGpio = LED_ENABLE;

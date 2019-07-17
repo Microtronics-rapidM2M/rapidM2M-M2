@@ -15,7 +15,7 @@
  * transmitted periodically (transmission interval) to the server. 
  * 
  * Note: To use the recorded data within the interface of the server (e.g. reports, visualisations, graphics, etc.)
- *       it is necessary to define a Data Descriptor (see 30_ui_1.txt)
+ *       it is necessary to define a Data Descriptor (see 30_System_Values_1.txt)
  *
  * 
  * Only compatible with rapidM2M M2xx
@@ -24,7 +24,7 @@
  * @version 20190508  
  */
 
-#include <rapidM2M M2\mx>
+#include ".\rapidM2M M2\mx.inc"
 
 /* Forward declarations of public functions */
 forward public Timer1s();                   // Called up 1x per sec. for the program sequence

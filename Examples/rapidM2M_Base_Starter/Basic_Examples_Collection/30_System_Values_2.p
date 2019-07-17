@@ -16,7 +16,7 @@
  * measurement data can be configured via the server.   
  * 
  * Note: To use the recorded data within the interface of the Server (e.g. reports, visualisations, graphics, etc.)
- *       it is necessary to define a Data Descriptor (see 30_ui_2.txt)
+ *       it is necessary to define a Data Descriptor (see 30_System_Values_2.txt)
  *
  * Only compatible with rapidM2M M2xx
  * 
@@ -88,7 +88,7 @@ main()
 public Timer1s()
 {
   iRecTimer--;                              // Counter counting down the sec. to the next recording
-  if(iRecTimer <= 0)                        // When the counter has expired -> 
+  if(iRecTimer <= 0)                        // When the counter has expired ->
   {
     print("Create Record\r\n");
     RecordData();                           // Calls up the function to record the data
@@ -145,7 +145,7 @@ public ReadConfig(iCfg)
   if(iCfg == CFG_BASIC)                     // If the changed configuration is the basic config ->
   {
     new aData{CFG_SIZE};                    // Temporary memory for the basic config read from the system
-	new iTmp;                               // Temporary memory for a basic config parameter
+    new iTmp;                               // Temporary memory for a basic config parameter
 
     /* Reads basic config from the system and copies it to the temporary memory. The number of the config block
        and return value of the read function (number of bytes or error code) is then issued via the console */

@@ -69,7 +69,7 @@ const
 }
 
 static iAppState;                           // Current state of the application
-static iTimerTimeout;                       // Remaining time until switching to the next state  
+static iTimerTimeout;                       // Remaining time until switching to the next state
 
 /* Application entry point */
 main()
@@ -99,7 +99,7 @@ main()
   iResult = rM2M_TimerAdd(iIdx);
   printf("rM2M_TimerAdd(%d) = %d\r\n", iIdx, iResult);
   
-  //Init state
+  // Init state
   StateChange(STATE_OFF);                      // Calls function to set the state of the application to "STATE_OFF"
 }
 
@@ -112,14 +112,14 @@ StateChange(iNewState)
 {
   switch(iNewState)                            // Switch new state for the application 
   {
-    case STATE_OFF:			
+    case STATE_OFF:
     {
       // Turns off the RGB LED
       rM2M_GpioSet(PIN_LED1_R,  LED_DISABLE);
       rM2M_GpioSet(PIN_LED1_G,  LED_DISABLE);
       rM2M_GpioSet(PIN_LED1_B,  LED_DISABLE);
       
-	  //Sets the counter for the remaining time until switching to the next state to "TIMEOUT_OFF"  
+      // Sets the counter for the remaining time until switching to the next state to "TIMEOUT_OFF"  
       Handle_CheckWait(iTimerTimeout, TIMEOUT_OFF);
     }
     case STATE_RED:
@@ -129,7 +129,7 @@ StateChange(iNewState)
       rM2M_GpioSet(PIN_LED1_G,  LED_DISABLE);
       rM2M_GpioSet(PIN_LED1_B,  LED_DISABLE);
       
-      //Sets the counter for the remaining time until switching to the next state to "TIMEOUT_RED"
+      // Sets the counter for the remaining time until switching to the next state to "TIMEOUT_RED"
       Handle_CheckWait(iTimerTimeout, TIMEOUT_RED);
     }
     case STATE_RED_YELLOW:
@@ -139,7 +139,7 @@ StateChange(iNewState)
       rM2M_GpioSet(PIN_LED1_G,  LED_ENABLE);
       rM2M_GpioSet(PIN_LED1_B,  LED_DISABLE);
       
-      //Sets the counter for the remaining time until switching to the next state to "TIMEOUT_RED_YELLOW"
+      // Sets the counter for the remaining time until switching to the next state to "TIMEOUT_RED_YELLOW"
       Handle_CheckWait(iTimerTimeout, TIMEOUT_RED_YELLOW);
     }
     case STATE_GREEN:
@@ -149,7 +149,7 @@ StateChange(iNewState)
       rM2M_GpioSet(PIN_LED1_G,  LED_ENABLE);
       rM2M_GpioSet(PIN_LED1_B,  LED_DISABLE);
       
-      //Sets the counter for the remaining time until switching to the next state to "TIMEOUT_GREEN"
+      // Sets the counter for the remaining time until switching to the next state to "TIMEOUT_GREEN"
       Handle_CheckWait(iTimerTimeout, TIMEOUT_GREEN);
     }
     case STATE_YELLOW:
@@ -159,7 +159,7 @@ StateChange(iNewState)
       rM2M_GpioSet(PIN_LED1_G,  LED_ENABLE);
       rM2M_GpioSet(PIN_LED1_B,  LED_DISABLE);
       
-	  //Sets the counter for the remaining time until switching to the next state to "TIMEOUT_YELLOW"
+      // Sets the counter for the remaining time until switching to the next state to "TIMEOUT_YELLOW"
       Handle_CheckWait(iTimerTimeout, TIMEOUT_YELLOW);
     }
   }
@@ -170,12 +170,12 @@ StateChange(iNewState)
 /* Function that manages the switching between the different application states */ 
 StateHandle()
 {
-  switch(iAppState)                            // Switch current state of the application  
+  switch(iAppState)                            // Switch current state of the application
   {
     case STATE_OFF:
     {
       if(Handle_CheckWait(iTimerTimeout))      // If the remaining time until switching to the next state has expired ->  
-        StateChange(STATE_RED);                // Calls function to set the state of the application to "STATE_RED"   
+        StateChange(STATE_RED);                // Calls function to set the state of the application to "STATE_RED"
     }
     case STATE_RED:
     {
@@ -185,17 +185,17 @@ StateHandle()
     case STATE_RED_YELLOW:
     {
       if(Handle_CheckWait(iTimerTimeout))      // If the remaining time until switching to the next state has expired ->
-        StateChange(STATE_GREEN);              // Calls function to set the state of the application to "STATE_GREEN"   
+        StateChange(STATE_GREEN);              // Calls function to set the state of the application to "STATE_GREEN"
     }
     case STATE_GREEN:
     {
       if(Handle_CheckWait(iTimerTimeout))      // If the remaining time until switching to the next state has expired ->
-        StateChange(STATE_YELLOW);             // Calls function to set the state of the application to "STATE_YELLOW"   
+        StateChange(STATE_YELLOW);             // Calls function to set the state of the application to "STATE_YELLOW"
     }
     case STATE_YELLOW:
     {
       if(Handle_CheckWait(iTimerTimeout))      // If the remaining time until switching to the next state has expired ->
-        StateChange(STATE_RED);                // Calls function to set the state of the application to "STATE_RED"   
+        StateChange(STATE_RED);                // Calls function to set the state of the application to "STATE_RED"
     }
   }
 }
