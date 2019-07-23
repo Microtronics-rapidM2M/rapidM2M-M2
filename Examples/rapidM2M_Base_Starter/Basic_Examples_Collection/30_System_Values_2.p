@@ -162,9 +162,9 @@ public ReadConfig(iCfg)
          changes are received. If special actions have to be executed for individual parameters,
          it is thus not necessary to implement these separately for both cases.                         */
 	  iTmp = INTERVAL_RECORD; 
-      rM2M_Pack(aData,  0, iRecInterval, RM2M_PACK_U32|RM2M_PACK_BE);
+      rM2M_Pack(aData,  0, iTmp, RM2M_PACK_U32|RM2M_PACK_BE);
 	  iTmp = INTERVAL_TX;  
-      rM2M_Pack(aData,  4, iTxInterval,  RM2M_PACK_U32|RM2M_PACK_BE);
+      rM2M_Pack(aData,  4, iTmp, RM2M_PACK_U32|RM2M_PACK_BE);
       iSize = CFG_SIZE;
       print("created new Config #0\r\n");
     }
