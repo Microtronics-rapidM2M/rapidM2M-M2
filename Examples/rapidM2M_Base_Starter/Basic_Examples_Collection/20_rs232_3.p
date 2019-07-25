@@ -13,7 +13,7 @@
  * Receives data via the UART interface and scans it for data frames that start with the character "+" and 
  * end either with a carriage return or line feed. The received data is issued again immediately after receiving 
  * it via the UART interface. If a complete data frame was received, a string is created that is composed as follows: 
- * "UartRx (<data frame received via UART>) <number of characters of data frame> OK".
+ * "UartRx (<number of characters of data frame>) <data frame received via UART> OK".
  * This string is then issued via the console and the UART interface. The received data frame is also evaluated as 
  * follows:
  *  "on":  LED 2 is turned on
@@ -142,7 +142,7 @@ public UartRx(const data{}, len)
  * Function to process the received data frame
  *
  * Creates a string that is composed as follows and issues it via the console and the UART interface.
- * "UartRx (<data frame received via UART>) <number of characters of data frame> OK".
+ * "UartRx (<number of characters of data frame>) <data frame received via UART> OK".
  *
  * The received data frame is also evaluated as follows:
  *  "on":  LED 2 is turned on
@@ -156,7 +156,7 @@ ExecuteCmd(aData{}, iLength)
   new sString{256};                         // Temporary memory for the string to be issued via the console and the UART interface 
   new iStringLength;                        // Temporary memory for number of characters of the string to be issued
   
-  // Creates the string to be issued. It is composed as follows: "UartRx (<data frame received via UART>) <number of characters of data frame> OK". 
+  // Creates the string to be issued. It is composed as follows: "UartRx (<number of characters of data frame>) <data frame received via UART> OK". 
   iStringLength = sprintf(sString, sizeof(sString), "UartRx (%d) %s OK\r\n", iLength, aData)
   print(sString);										// Issues the created string via the console	
   rM2M_UartWrite(PORT_UART, sString, iStringLength);    // Issues the created string via the UART interface

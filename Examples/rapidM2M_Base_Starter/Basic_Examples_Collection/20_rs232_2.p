@@ -12,7 +12,7 @@
  *
  * Receives data via the UART interface and scans it for data frames that start with the character "+" and 
  * end either with a carriage return or line feed. If a complete data frame was received, a string is created 
- * that is composed as follows: "UartRx (<data frame received via UART>) <number of characters of data frame> OK".
+ * that is composed as follows: "UartRx (<number of characters of data frame>) <data frame received via UART> OK".
  * This string is then issued via the console and the UART interface.
  *
  * Only compatible with rapidM2M M2xx and rapidM2M M3
@@ -78,7 +78,7 @@ public UartRx(const data{}, len)
     
     switch(iState)                          // Switch state of the reception of the data frames ->
     {
-      case STATE_WAIT_STX:					// Wait for the start character
+      case STATE_WAIT_STX:                  // Wait for the start character
       {
         if(iChar=='+')                      // If the start character was received ->
         {
@@ -97,7 +97,7 @@ public UartRx(const data{}, len)
           if(iFrameLength < MAX_LENGTH)     // If the maximum length for a data frame is not exceeded ->
           {
             aFrame{iFrameLength++} = iChar; // Copies the current character into the array for storing a data frame and 
-			                                // increases the number of received characters   
+                                            // increases the number of received characters   
           }
           else                              // Otherwise (maximum length for the data frame exceeded) -> 
           { 
@@ -124,7 +124,7 @@ public UartRx(const data{}, len)
  * Function to process the received data frame
  *
  * Creates a string that is composed as follows and issues it via the console and the UART interface.
- * "UartRx (<data frame received via UART>) <number of characters of data frame> OK".
+ * "UartRx (<number of characters of data frame>) <data frame received via UART> OK".
  *
  * @param aData[]:u8  - Array that contains the received data frame
  * @param iLength:s32 - Number of characters of the received data frame
@@ -134,8 +134,8 @@ ExecuteCmd(aData{}, iLength)
   new sString{256};                         // Temporary memory for the string to be issued via the console and the UART interface 
   new iStringLength;                        // Temporary memory for number of characters of the string to be issued
   
-  // Creates the string to be issued. It is composed as follows: "UartRx (<data frame received via UART>) <number of characters of data frame> OK". 
+  // Creates the string to be issued. It is composed as follows: "UartRx (<number of characters of data frame>) <data frame received via UART> OK". 
   iStringLength = sprintf(sString, sizeof(sString), "UartRx (%d) %s OK\r\n", iLength, aData)
-  print(sString);										// Issues the created string via the console	
+  print(sString);                           // Issues the created string via the console	
   rM2M_UartWrite(PORT_UART, sString, iStringLength);    // Issues the created string via the UART interface
 }
