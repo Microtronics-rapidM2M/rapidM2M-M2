@@ -1,5 +1,5 @@
 ## Explanation
-The examples included in the basic example collection are designed to demonstrate how to use the rapidM2M Device API. In addition to the basic handling you also find best practice examples. With the number at the begin of the name also the complexity of the example increases. 
+The examples included in the basic example collection are designed to demonstrate how to use the rapidM2M Device API. In addition to the basic handling you also find best practice examples. With the increasing number at the beginning of the name, the complexity of the example increases as well. 
 
 ## Example overview
 * **[00_common_0_Main.p](https://github.com/Microtronics-rapidM2M/rapidM2M-M2/blob/master/Examples/rapidM2M_Base_Starter/Basic_Examples_Collection/00_common_0_Main.p)** <br/>
@@ -8,6 +8,9 @@ Prints "Hello World" to the development console once after starting the script.
 * **[00_common_1_Timer_1.p](https://github.com/Microtronics-rapidM2M/rapidM2M-M2/blob/master/Examples/rapidM2M_Base_Starter/Basic_Examples_Collection/00_common_1_Timer_1.p)** <br/>
 *Extended rapidM2M "Hello World" Example* <br/>
 Prints "Hello World" every second to the development console
+* **[00_common_1_Timer_2.p](https://github.com/Microtronics-rapidM2M/rapidM2M-M2/blob/master/Examples/rapidM2M_Base_Starter/Basic_Examples_Collection/00_common_1_Timer_2.p)** <br/>
+*Extended rapidM2M "Hello World" Example* <br/>
+Prints "Hello World" every 5 seconds to the development console
 * **[00_common_2_get_module_info.p](https://github.com/Microtronics-rapidM2M/rapidM2M-M2/blob/master/Examples/rapidM2M_Base_Starter/Basic_Examples_Collection/00_common_2_get_module_info.p)** <br/>
 Prints the information for identifying the rapidM2M hardware and the implemented API level to the development console.
 * **[00_common_5_data_types.p](https://github.com/Microtronics-rapidM2M/rapidM2M-M2/blob/master/Examples/rapidM2M_Base_Starter/Basic_Examples_Collection/00_common_5_data_types.p)** <br/>
@@ -150,17 +153,26 @@ The state machine has seven different states that are indicated by the RGB LED1.
 Simulates and records (record interval) a temperature value that changes between 19°C and 31°C in 1°C steps. The measurement data generated this way is then transmitted periodically (transmission interval) to the server. If the temperature exceeds 25°C, an alarm is triggered. Once an alarm has been triggered and the temperature falls below 25°C again, the alarm is released. In both cases (when triggering or releasing the alarm) an alarm record is generated and transmitted to the server immediately.<br/>
 * **[61_alarm_2.p](https://github.com/Microtronics-rapidM2M/rapidM2M-M2/blob/master/Examples/rapidM2M_Base_Starter/Basic_Examples_Collection/61_alarm_2.p)** <br/>
 *Extended "Alarm" Example* <br/>
-Simulates and records (record interval) a temperature value that changes between 19°C and 31°C in 1°C steps. The measurement data generated this way is then transmitted periodically (transmission interval) to the server. If the temperature is greater than or equal to 25°C, an alarm is triggered. Once an alarm has been triggered and the temperature falls to or below 25°C - 5% (i.e. 23,75°C) again, the alarm is released. In both cases (when triggering  or releasing the alarm) an alarm record is generated and transmitted to the server immediately. </br>
- * **[70_wifi_scan.p](https://github.com/Microtronics-rapidM2M/rapidM2M-M2/blob/master/Examples/rapidM2M_Base_Starter/Basic_Examples_Collection/70_wifi_scan.p)** <br/>
+Simulates and records (record interval) a temperature value that changes between 19°C and 31°C in 1°C steps. The measurement data generated this way is then transmitted periodically (transmission interval) to the server. If the temperature is greater than or equal to 25°C, an alarm is triggered. Once an alarm has been triggered and the temperature falls to or below 25°C - 5% (i.e. 23,75°C) again, the alarm is released. In both cases (when triggering or releasing the alarm) an alarm record is generated and transmitted to the server immediately. </br>
+* **[61_alarm_3.p](https://github.com/Microtronics-rapidM2M/rapidM2M-M2/blob/master/Examples/rapidM2M_Base_Starter/Basic_Examples_Collection/61_alarm_3.p)** <br/>
+*Extended "Alarm" Example* <br/>
+Simulates and records (record interval) a temperature value that changes between 19°C and 31°C in 1°C steps. The measurement data generated this way is then transmitted periodically (transmission interval) to the server. If the temperature is greater than or equal to 25°C, an alarm is triggered. Once an alarm has been triggered and the temperature falls to or below 25°C - 5% (i.e. 23,75°C) again, the alarm is released. In both cases (when triggering or releasing the alarm) an alarm record is generated and transmitted to the server immediately. </br>
+* **[70_wifi_scan.p](https://github.com/Microtronics-rapidM2M/rapidM2M-M2/blob/master/Examples/rapidM2M_Base_Starter/Basic_Examples_Collection/70_wifi_scan.p)** <br/>
 *Simple "WiFi" Example* <br/>
 Scans every 5 seconds for WiFi network in the receiving range and issues security type, WiFi RF channel and Service Set Identifier of the found WiFi networks via the console <br/>
 * **[70_wifi_scan_devinfo.p](https://github.com/Microtronics-rapidM2M/rapidM2M-M2/blob/master/Examples/rapidM2M_Base_Starter/Basic_Examples_Collection/70_wifi_scan_devinfo.p)** <br/>
 *Extended "WiFi" Example* <br/>
 Scans for WiFi network in the receiving range every 5 seconds and issues security type, WiFi RF channel and Service Set Identifier of the found WiFi networks via the console. After the initialisation of the WiFi interface the name/designation, hardware version, firmware version and MAC adress of the built-in WiFi module are also issued once via the console.
+* **[Alarm.inc](https://github.com/Microtronics-rapidM2M/rapidM2M-M2/blob/master/Examples/rapidM2M_Base_Starter/Basic_Examples_Collection/Alarm.inc)** <br/>
+*Alarm interface functions* <br/>
+Provides generic functions and constants for alarm implementation. <br/>
 * **[lis3dsh.inc](https://github.com/Microtronics-rapidM2M/rapidM2M-M2/blob/master/Examples/rapidM2M_Base_Starter/Basic_Examples_Collection/lis3dsh.inc)** <br/>
 *LIS3DSH interface functions* <br/>
 * **[sht31.inc](https://github.com/Microtronics-rapidM2M/rapidM2M-M2/blob/master/Examples/rapidM2M_Base_Starter/Basic_Examples_Collection/sht31.inc)** <br/>
 *SHT31 interface functions* <br/>
+* **[tmp112.inc](https://github.com/Microtronics-rapidM2M/rapidM2M-M2/blob/master/Examples/rapidM2M_Base_Starter/Basic_Examples_Collection/tmp112.inc)** <br/>
+*TMP112 interface functions* <br/>
+The TMP112 is a high-accuracy digital temperature sensor. It is highly linear and provides easy temperature calculation. The on-chip 12-bit ADC offers resolutions down to 0.0625°C. <br/>
 
 ## rapidM2M Device API functions used in the examples 
 
@@ -171,6 +183,7 @@ Click on the name of the function to view in which example it is used.
 <details>
 <summary>**rM2M_GetTime(&hour=0, &minute=0, &second=0, timestamp=0)**</summary>
 + 50_filetransfer_send.p <br/>
++ 50_filetransfer_send_multiple.p <br/>
 </details>
 
 <details>
@@ -210,12 +223,14 @@ Click on the name of the function to view in which example it is used.
 + 31_i2c_tmp112_1.p<br/>
 + 31_i2c_tmp112_2.p<br/>
 + 40_i2c_sht31.p<br/>  
++ 50_filetransfer_send_multiple.p <br/>
 + 50_spi.p<br/>  
 + 50_spi_winkel.p<br/>  
 + 60_statemachine_1.p<br/>  
 + 60_statemachine_2.p<br/>  
 + 61_alarm_1.p<br/>  
 + 61_alarm_2.p<br/>  
++ 61_alarm_3.p<br/>
 + 70_wifi_scan.p<br/>  
 + 70_wifi_scan_devinfo.p<br/>  
 </details>
@@ -228,7 +243,8 @@ Click on the name of the function to view in which example it is used.
 
 <details>
 <summary>**rM2M_TimerAddExt(funcidx, bool:cyclic, time)**</summary>
-+ 00_common_1_Timer_1.p<br/> 
++ 00_common_1_Timer_1.p<br/>
++ 00_common_1_Timer_2.p<br/>  
 + 10_Switch_Long.p<br/>
 + 11_Led_2.p<br/>
 + 11_Led_2_3.p<br/>
@@ -272,6 +288,7 @@ Click on the name of the function to view in which example it is used.
 + 31_i2c_tmp112_2.p<br/>
 + 61_alarm_1.p<br/>
 + 61_alarm_2.p<br/>
++ 61_alarm_3.p<br/>
 </details>
 
 <details>
@@ -323,10 +340,13 @@ Click on the name of the function to view in which example it is used.
 + 31_i2c_tmp112_2.p<br/>
 + 61_alarm_1.p<br/>
 + 61_alarm_2.p<br/>
++ 61_alarm_3.p<br/>
++ Alarm.inc <br/>
 </details>
 
 <details>
 <summary>**rM2M_CfgRead(cfg, pos, data{}, size)**</summary>
++ 30_System_Values_2.p<br/>
 + 30_System_Values_3.p<br/>
 + 31_i2c_sht21_2.p<br/>
 + 31_i2c_tmp112_2.p<br/>
@@ -387,6 +407,7 @@ Click on the name of the function to view in which example it is used.
 
 <details>
 <summary>**rM2M_Pack(const data{}, pos, &{Float,Fixed,_}:value, type)**</summary>
++ 00_common_4_pack.p <br/> 
 + 30_System_Values_1.p<br/>
 + 30_System_Values_2.p<br/>
 + 30_System_Values_3.p<br/>
@@ -397,6 +418,7 @@ Click on the name of the function to view in which example it is used.
 + 50_filetransfer_receive.p <br/>
 + 61_alarm_1.p<br/>
 + 61_alarm_2.p<br/>
++ 61_alarm_3.p<br/>
 + 70_wifi_scan.p<br/>
 + 70_wifi_scan_devinfo.p<br/>
 + lis3dsh.inc<br/>
@@ -566,6 +588,7 @@ Click on the name of the function to view in which example it is used.
 <details>
 <summary>**funcidx(const name[])**</summary>
 + 00_common_1_Timer_1.p<br/>
++ 00_common_1_Timer_2.p<br/> 
 + 10_Switch.p<br/>
 + 10_Switch_Long.p<br/>
 + 11_Led_2.p<br/>
@@ -607,6 +630,7 @@ Click on the name of the function to view in which example it is used.
 + 60_statemachine_2.p<br/>
 + 61_alarm_1.p<br/>
 + 61_alarm_2.p<br/>
++ 61_alarm_3.p<br/>
 + 70_wifi_scan.p<br/>
 + 70_wifi_scan_devinfo.p<br/>
 </details>
@@ -638,6 +662,7 @@ Click on the name of the function to view in which example it is used.
 + 60_statemachine_0.p<br/>  
 + 61_alarm_1.p<br/>
 + 61_alarm_2.p<br/>
++ 61_alarm_3.p<br/>
 + 70_wifi_scan.p<br/>
 + 70_wifi_scan_devinfo.p<br/>
 + sht31.inc<br/>
@@ -646,7 +671,10 @@ Click on the name of the function to view in which example it is used.
 <details>
 <summary>**printf(const format[], {Float,Fixed,_}:...)**</summary>
 + 00_common_1_Timer_1.p<br/>
++ 00_common_1_Timer_2.p<br/> 
 + 00_common_2_get_module_info.p<br/>
++ 00_common_3_NamedArray.p<br/> 
++ 00_common_4_pack.p<br/> 
 + 00_common_5_data_types.p<br/>
 + 00_common_6_array.p<br/>
 + 00_common_8_loop.p<br/>
@@ -692,6 +720,7 @@ Click on the name of the function to view in which example it is used.
 + 60_statemachine_2.p<br/>
 + 61_alarm_1.p<br/>
 + 61_alarm_2.p<br/>
++ 61_alarm_3.p<br/>
 + 70_wifi_scan.p<br/>
 + 70_wifi_scan_devinfo.p<br/>
 + lis3dsh.inc<br/>

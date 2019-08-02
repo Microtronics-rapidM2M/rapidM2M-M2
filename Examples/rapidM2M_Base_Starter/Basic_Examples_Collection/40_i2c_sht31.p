@@ -119,8 +119,8 @@ InitHandler()
     iResult = rM2M_I2cInit(PORT_I2C, 400000, 0); // Inits the I2C interface with 400kHz clock 
     
     /* Inits SHT31 (Temp. and rh measurement) and issues an error message if the sensor could not be initialised */
-    iResult = SHT31_Init(hTempRh, 0, SHT31_I2C_ADR_A);
-    if(iResult >= OK)
+    iResult = SHT31_Init(hTempRh, PORT_I2C, SHT31_I2C_ADR_A);
+    if(iResult < OK)
       printf("[INIT] SHT31_Init() = %d\r\n", iResult);
 
     rM2M_I2cClose(PORT_I2C);                     // Closes the I2C interface  

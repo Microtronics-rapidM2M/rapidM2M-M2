@@ -19,7 +19,7 @@
  * Only compatible with rapidM2M Base Starter
  * 
  *
- * @version 20190508  
+ * @version 20190730  
  */
 
  /* Path for hardware-specific include file */
@@ -131,9 +131,16 @@ InitHandler()
     iResult = LIS3DSH_Init(hAcc, PIN_CS_ACC, PORT_SPI);// Inits LIS3DSH accelerometer
     if(iResult >= OK)                                  // If the initialisation was successful ->
     {
-      // Enables X, Y, Z axes and sets output data rate (ODR) to 6.25 Hz
-      LIS3DSH_Write(hAcc, LIS3DSH_REG_CTRL4, LIS3DSH_ODR_6HZ25|0x7);
-      printf("[INIT] LIS3DSH OK\r\n");
+      // Enables X, Y, Z axes and sets output data rate (ODR) to 6.25 Hz and check if it was sucessful
+      iResult = LIS3DSH_Write(hAcc, LIS3DSH_REG_CTRL4, LIS3DSH_ODR_6HZ25|0x7);
+      if(iResult >= OK)
+      {
+        printf("[INIT] LIS3DSH OK\r\n");
+      } 
+      else 
+      {
+        printf("[INIT] LIS3DSH_Init failed %d\r\n", iResult);
+      }
     }
     else                                               // Otherwise ->  Issues an error message via the console
     {
@@ -214,8 +221,10 @@ public TimerFast()
   if(iResult < OK)
     printf("[MAIN] rM2M_SpiInit() = %d\r\n", iResult);
   
-  LIS3DSH_ReadMeasurement(hAcc, iX, iY, iZ)            // Reads the g-forces [mg] for all 3 axes from the LIS3DSH (accelerometer)
-  
+  iResult = LIS3DSH_ReadMeasurement(hAcc, iX, iY, iZ)            // Reads the g-forces [mg] for all 3 axes from the LIS3DSH (accelerometer)
+  if(iResult < OK)
+    printf("[MAIN] LIS3DSH_ReadMeasurement() = %d\r\n", iResult);
+
   iXsum += iX;                                         // Adds up the read g-force of the x axis 
   iYsum += iY;                                         // Adds up the read g-force of the y axis 
   iZsum += iZ;                                         // Adds up the read g-force of the z axis 

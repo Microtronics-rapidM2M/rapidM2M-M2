@@ -10,9 +10,11 @@
  *
  * @version 20190704
  *
- * revision history:
+ * Revision history:
+ * 20190729 01v002
+ * - Reading the acceleration data from the LIS3DSH has been optimised
  * 20190704 01v001
- * - If the current connection type is "Online" and the connection is interrupted the system  
+ * - If the current connection type is "Online" and the connection is interrupted, the system  
  *   automatically tries to re-establish the connection.
  */
 
@@ -65,7 +67,7 @@ const
 }
 
 static const caAppId{}    = "Base_Starter_Demo";                    // Global value of application Id
-static const caAppVers{}  = "01v001";                               // Global value of application version
+static const caAppVers{}  = "01v002";                               // Global value of application version
 
 
 /* This table is used to convert the raw value to the angle */ 
@@ -315,17 +317,12 @@ Handle_LIS3DSH()
   /* configure SPI for LIS3D(S)H */
   rM2M_SpiInit(hACC.spi, LIS3DSH_SPICLK, LIS3DSH_SPIMODE);
   
-  new aRawX{2}, aRawY{2}, aRawZ{2};         	// 8-bit values from accelerometer
-
-  LIS3DSH_ReadBuf(hACC, LIS3DSH_REG_OUT_X_L, aRawX, 2);
-  LIS3DSH_ReadBuf(hACC, LIS3DSH_REG_OUT_Y_L, aRawY, 2);
-  LIS3DSH_ReadBuf(hACC, LIS3DSH_REG_OUT_Z_L, aRawZ, 2);
-
   new iX, iY, iZ;
-  rM2M_Pack(aRawX, 0, iX, RM2M_PACK_S16 + RM2M_PACK_GET);
-  rM2M_Pack(aRawY, 0, iY, RM2M_PACK_S16 + RM2M_PACK_GET);
-  rM2M_Pack(aRawZ, 0, iZ, RM2M_PACK_S16 + RM2M_PACK_GET);
-
+ 
+  LIS3DSH_Read(hACC, LIS3DSH_REG_OUT_X, iX);
+  LIS3DSH_Read(hACC, LIS3DSH_REG_OUT_Y, iY);
+  LIS3DSH_Read(hACC, LIS3DSH_REG_OUT_Z, iZ);
+  
   /* Converting raw values to Angle */
   CalcTable(iX, ixAngle, aAgnleTable);         // Converts x axis raw value to angle
   CalcTable(iY, iyAngle, aAgnleTable);         // Converts y axis raw value to angle
@@ -464,13 +461,12 @@ Handle_Record()
                                                                 // next recording 
   if(iRecTimer <= 0)                                            // When the counter has expired 
   {
+    new sSysValues[TMx_SysValue];                               // Temporary memory for the internal measurement values  
     
-    /* Temporary memory for the HW information */
-    new sSysValues[TMx_SysValue];  
-    
-    Mx_GetSysValues(sSysValues);                               // retrieve identification of HW module
-    iBattVIn=sSysValues.VAux;                                  // retrieve rapidM2M base partner board battery voltage
-    iVIn=sSysValues.VIn;                                       // retrieve rapidM2M base partner board input voltage
+    Mx_GetSysValues(sSysValues);                                // Reads the last valid values for Vin and Vaux from the system 
+                                                                // The interval for determining these values is 1sec. and cannot be changed.
+    iBattVIn = sSysValues.VAux;                                 // Copies the currently read battery voltage to the global variable
+    iVIn     = sSysValues.VIn;                                  // Copies the currently read input voltage to the global variable
   
     /* Temporary memory in which the data record to be saved is compiled */
     new aRecData{HISTDATA_SIZE};
