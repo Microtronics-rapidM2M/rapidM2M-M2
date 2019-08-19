@@ -8,9 +8,13 @@
  *           | |
  *           |_|
  *
- * @version 20190704
+ * @version 20190816
  *
  * Revision history:
+ * 20190816 01v003
+ * - Refactored Handle_LIS3DSH()
+ * - Added precise CalcAngle() function
+ * - Added new constants (LED_ENABLE & LED_DISABLE) to replace RM2M_GPIO_HIGH & RM2M_GPIO_LOW
  * 20190729 01v002
  * - Reading the acceleration data from the LIS3DSH has been optimised
  * 20190704 01v001
@@ -34,8 +38,10 @@ const
   PIN_ACC_CS = 5,                                                 // CS signal accelerometer
   IRQ_KEY    = 0,                                                 // IRQ for the key
   PORT_I2C   = 0,                                                 // I2C Port used for communication with Temperature/Humidity sensor
-  CNT_RESET_TIME     = 5000,                                      // Time (ms) for which the button must be pressed to start
-                                                                  // a connection 
+  CNT_RESET_TIME = 5000,                                          // Time (ms) for which the button must be pressed to start
+                                                                  // a connection
+  LED_ENABLE     = RM2M_GPIO_HIGH,                                // By setting the GPIO to "high" the LED is turned on
+  LED_DISABLE    = RM2M_GPIO_LOW,                                 // By setting the GPIO to "low" the LED is turned off
 };
 
 
@@ -47,11 +53,13 @@ const
   TXMODE             = RM2M_TXMODE_TRIG,                           // Connection type, default "Interval"
   HUMIDITY_WARN      = 300,                                        // Default humidity warning threshold
   HUMIDITY_ALERT     = 400,                                        // Default humidity alerting threshold
-  THRESHOLD_ACCPOS   = 75,                                         // Default accelerometer up (positive) threshold
-  THRESHOLD_ACCNEG   = -75,                                        // Default accelerometer down (negative) threshold
+  THRESHOLD_ACCPOS   = 45,                                         // Default accelerometer up (positive) threshold
+  THRESHOLD_ACCNEG   = -45,                                        // Default accelerometer down (negative) threshold
 
   TX_RETRY_MAX      = 10,                                          // Maximum retries for establishing the online connection
   TX_RETRY_INTERVAL = 60 * 60,                                     // Waiting time before restarting the connection attempts [sec.], default 60min
+
+  GFORCE_MAX        = 1030,                                        // Current g-force equivalent to an angle of 90° [mg]
 }
 /* Size and index specifications for the configuration blocks and measurement data block */
 const
@@ -67,21 +75,8 @@ const
 }
 
 static const caAppId{}    = "Base_Starter_Demo";                    // Global value of application Id
-static const caAppVers{}  = "01v002";                               // Global value of application version
+static const caAppVers{}  = "01v003";                               // Global value of application version
 
-
-/* This table is used to convert the raw value to the angle */ 
- static aAgnleTable[9][TablePoint] = [                              
-  [ -16800, -90],
-  [ -15500,  -68],
-  [ -11900,  -45],
-  [ -6500,  -23],
-  [ -70,  0],
-  [ 6200,  23],
-  [ 11700,  45],
-  [ 15300,  68],
-  [ 16600,  90]
-];
 
 /* forward declarations of public functions */
 forward public MainTimer();                 // Called up 1x per sec. for the program sequence
@@ -113,7 +108,6 @@ static iHumidity_Warn;                      // Humidity warning threshold
 static iHumidity_Alert;                     // Humidity alerting threshold
 static iThresholdAccPositive;               // Accelerometer positive threshold
 static iThresholdAccNegative;               // Accelerometer negative threshold
-                                                                   
 
 /* Global variables for the remaining time until certain actions are triggered */
 static iRecTimer;                            // Sec. until the next recording  
@@ -228,16 +222,18 @@ InitHandler()
 
   if(sPoC_Vars.init == INIT_START)
   {
-    /* set PIN_LEDx as signalling output with init state OFF (0) */
-    rM2M_GpioSet(PIN_LED1_R, RM2M_GPIO_LOW);
-    rM2M_GpioDir(PIN_LED1_R, RM2M_GPIO_OUTPUT);
-    rM2M_GpioSet(PIN_LED1_G, RM2M_GPIO_LOW);
+    /* Sets signal direction for GPIOs used to control LEDs to "Output" and turns off all LEDs
+       Note: It is recommended to set the desired output level of a GPIO before setting the 
+             signal direction for the GPIO.                                                     */
+    rM2M_GpioSet(PIN_LED1_R, LED_DISABLE);       // Sets the output level of the GPIO to "low" ( LED 1: Red is off)
+    rM2M_GpioDir(PIN_LED1_R, RM2M_GPIO_OUTPUT);  // Sets the signal direction for the GPIO used to control LED 1: Red 
+    rM2M_GpioSet(PIN_LED1_G, LED_DISABLE);
     rM2M_GpioDir(PIN_LED1_G, RM2M_GPIO_OUTPUT);
-    rM2M_GpioSet(PIN_LED1_B, RM2M_GPIO_LOW);
+    rM2M_GpioSet(PIN_LED1_B, LED_DISABLE);
     rM2M_GpioDir(PIN_LED1_B, RM2M_GPIO_OUTPUT);
-    rM2M_GpioSet(PIN_LED2, RM2M_GPIO_LOW);
+    rM2M_GpioSet(PIN_LED2, LED_DISABLE);
     rM2M_GpioDir(PIN_LED2, RM2M_GPIO_OUTPUT);
-    rM2M_GpioSet(PIN_LED3, RM2M_GPIO_LOW);
+    rM2M_GpioSet(PIN_LED3, LED_DISABLE);
     rM2M_GpioDir(PIN_LED3, RM2M_GPIO_OUTPUT); 
 
     /* proceed immediately */
@@ -312,36 +308,64 @@ InitHandler()
 }
 
 
+/* Function for controlling the reading of the g-forces [mg] for all 3 axes of the LIS3DSH (accelerometer) and
+   calculating the angles of the axes in relation to the surface of the earth                                 */
 Handle_LIS3DSH()
 {
-  /* configure SPI for LIS3D(S)H */
-  rM2M_SpiInit(hACC.spi, LIS3DSH_SPICLK, LIS3DSH_SPIMODE);
-  
-  new iX, iY, iZ;
- 
-  LIS3DSH_Read(hACC, LIS3DSH_REG_OUT_X, iX);
-  LIS3DSH_Read(hACC, LIS3DSH_REG_OUT_Y, iY);
-  LIS3DSH_Read(hACC, LIS3DSH_REG_OUT_Z, iZ);
-  
-  /* Converting raw values to Angle */
-  CalcTable(iX, ixAngle, aAgnleTable);         // Converts x axis raw value to angle
-  CalcTable(iY, iyAngle, aAgnleTable);         // Converts y axis raw value to angle
-  CalcTable(iZ, izAngle, aAgnleTable);         // Converts y axis raw value to angle
+  new iResult;                                         // Temporary memory for the return value of a function
+  new iX, iY, iZ;                                      // Temporary memory for g-forces read from the LIS3DSH (accelerometer)
 
-  if (iyAngle > iThresholdAccPositive) {       // facing up i.e. if y Angle > Accelerometer Up Threshold
-    rM2M_GpioSet(PIN_LED2, RM2M_GPIO_LOW);     // set the LED2 to low
-    rM2M_GpioSet(PIN_LED3, RM2M_GPIO_HIGH);    // set the LED3 to high
+  // Inits SPI interface for communication with the LIS3DSH (accelerometer) and issues an error message if interface could not be initialised
+  iResult = rM2M_SpiInit(hACC.spi, LIS3DSH_SPICLK, LIS3DSH_SPIMODE);
+  if(iResult < OK)
+    printf("LIS3DSH_Init() = %d\r\n", iResult);
+
+  LIS3DSH_ReadMeasurement(hACC, iX, iY, iZ)            // Reads the g-forces [mg] for all 3 axes from the LIS3DSH (accelerometer)
+
+  // Calculates the angles of the axes in relation to the surface of the earth
+  ixAngle = CalcAngle(iX, GFORCE_MAX);
+  iyAngle = CalcAngle(iY, GFORCE_MAX);
+  izAngle = CalcAngle(iZ, GFORCE_MAX);
+
+  if (iyAngle > iThresholdAccPositive) {               // Facing up i.e. if y angle > accelerometer up threshold
+    rM2M_GpioSet(PIN_LED2, LED_DISABLE);               // Set the LED2 to "LED_DISABLE" 
+    rM2M_GpioSet(PIN_LED3, LED_ENABLE);                // Set the LED3 to "LED_ENABLE" 
   }
-  else if (iyAngle < iThresholdAccNegative) {  // facing down i.e. if y Angle < Accelerometer Up Threshold
-    rM2M_GpioSet(PIN_LED3, RM2M_GPIO_LOW);     // set the LED3 to low
-    rM2M_GpioSet(PIN_LED2, RM2M_GPIO_HIGH);    // set the LED2 to high 
+  else if (iyAngle < iThresholdAccNegative) {          // Facing down i.e. if y angle < accelerometer up threshold
+    rM2M_GpioSet(PIN_LED3, LED_DISABLE);               // Set the LED3 to "LED_DISABLE" 
+    rM2M_GpioSet(PIN_LED2, LED_ENABLE);                // Set the LED2 to "LED_ENABLE"  
   }
-  else {                                       // no indication
-    rM2M_GpioSet(PIN_LED3, RM2M_GPIO_LOW);     // set both LED to low
-    rM2M_GpioSet(PIN_LED2, RM2M_GPIO_LOW);
+  else {                                               // No indication
+    rM2M_GpioSet(PIN_LED3, LED_DISABLE);               // Set both LED to "LED_DISABLE" 
+    rM2M_GpioSet(PIN_LED2, LED_DISABLE);
   }
+
+  rM2M_SpiClose(hACC.spi);                             // Closes the SPI interface 
+}
+
+
+ /**
+ * Calculates the angle of the axis in relation to the surface of the earth
+ *
+ * @param iValue:s32    - G-force [mg] measured for an axis  
+ * @param iMaxValue:s32 - G-force equivalent to an angle of 90° [mg]
+ * @return s32          - Angle of the axis in relation to the surface of the earth
+ */                        
+stock CalcAngle(iValue, iMaxValue)
+{
+  new Float:fValue;
+  new iResult;
   
-  rM2M_SpiClose(hACC.spi);
+  if(iValue > iMaxValue)                            // If the measured g-force for the axis is higher than the g-force equivalent to an angle of 90° 
+    return 90;                                      // Return 90°  														
+  
+  if(iValue < -iMaxValue)                           // If the measured g-force for the axis is lower than the g-force equivalent to an angle of -90° 
+    return -90;                                     // Return -90°
+  
+  // Calculates the angle of the axis in relation to the surface of the earth and return it
+  fValue = 90-(acos(float(iValue) / float(iMaxValue)) * 180.0 / M_PI);
+  iResult = fValue;
+  return iResult;
 }
 
 
@@ -368,24 +392,24 @@ Handle_SHT31()
   }
   rM2M_I2cClose(PORT_I2C);
   
-  /* If iHumidity is less than 300 (i.e. 30.0) then only LED1 green state should be high */
+  /* If iHumidity is less than 300 (i.e. 30.0) then only LED1 green state should be enabled */
   if(iHumidity<iHumidity_Warn){
-  rM2M_GpioSet(PIN_LED1_R, RM2M_GPIO_LOW);
-  rM2M_GpioSet(PIN_LED1_G, RM2M_GPIO_HIGH);
-  rM2M_GpioSet(PIN_LED1_B, RM2M_GPIO_LOW);
+  rM2M_GpioSet(PIN_LED1_R, LED_DISABLE);
+  rM2M_GpioSet(PIN_LED1_G, LED_ENABLE);
+  rM2M_GpioSet(PIN_LED1_B, LED_DISABLE);
   }
   /* If iHumidity is between 300 and 400 (i.e. 30.0 and 40.0) then only LED1 yellow 
-     (combination of green and red) state should be high                                 */
+     (combination of green and red) state should be enabled                                 */
   else if(iHumidity >= iHumidity_Warn && iHumidity <= iHumidity_Alert){
-  rM2M_GpioSet(PIN_LED1_R, RM2M_GPIO_HIGH);
-  rM2M_GpioSet(PIN_LED1_G, RM2M_GPIO_HIGH);
-  rM2M_GpioSet(PIN_LED1_B, RM2M_GPIO_LOW); 
+  rM2M_GpioSet(PIN_LED1_R, LED_ENABLE);
+  rM2M_GpioSet(PIN_LED1_G, LED_ENABLE);
+  rM2M_GpioSet(PIN_LED1_B, LED_DISABLE); 
   }
-  /* If iHumidity is more than 400 (i.e. 40.0) then only LED1 red state should be high   */
+  /* If iHumidity is more than 400 (i.e. 40.0) then only LED1 red state should be enabled   */
   else if(iHumidity > iHumidity_Alert){
-  rM2M_GpioSet(PIN_LED1_R, RM2M_GPIO_HIGH);
-  rM2M_GpioSet(PIN_LED1_G, RM2M_GPIO_LOW);
-  rM2M_GpioSet(PIN_LED1_B, RM2M_GPIO_LOW); 
+  rM2M_GpioSet(PIN_LED1_R, LED_ENABLE);
+  rM2M_GpioSet(PIN_LED1_G, LED_DISABLE);
+  rM2M_GpioSet(PIN_LED1_B, LED_DISABLE); 
   }
 }
 
@@ -437,15 +461,15 @@ Handle_Transmission()
     }
   }
 
-  iTxTimer--;                                                   // Counter counting down the sec. to the next transmission
-  if(iTxTimer <= 0)                                             // When the counter has expired ->
+  iTxTimer--;                                 // Counter counting down the sec. to the next transmission
+  if(iTxTimer <= 0)                           // When the counter has expired ->
   {
     /* If the device is currently in "Online" mode, the rM2M_TxStart() function only initiates a 
 	   synchronisation of the configuration, registration and measurement data with the server.
        If the device is not online, the function initiates a connection to the server and the system 
 	   (Firmware) automatically synchronises the configuration, registration and measurement data 
 	   with the server. In any case the return value of the function is issued via the console.         */  
-	iResult = rM2M_TxStart();
+    iResult = rM2M_TxStart();
     if(iResult < OK)
       printf("rM2M_TxStart() = %d\r\n", iResult);
     
