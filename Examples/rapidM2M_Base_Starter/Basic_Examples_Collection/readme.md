@@ -163,9 +163,18 @@ Scans every 5 seconds for WiFi network in the receiving range and issues securit
 * **[70_wifi_scan_devinfo.p](https://github.com/Microtronics-rapidM2M/rapidM2M-M2/blob/master/Examples/rapidM2M_Base_Starter/Basic_Examples_Collection/70_wifi_scan_devinfo.p)** <br/>
 *Extended "WiFi" Example* <br/>
 Scans for WiFi network in the receiving range every 5 seconds and issues security type, WiFi RF channel and Service Set Identifier of the found WiFi networks via the console. After the initialisation of the WiFi interface the name/designation, hardware version, firmware version and MAC adress of the built-in WiFi module are also issued once via the console.
+* **[80_GNSS_NMEA_0.p](https://github.com/Microtronics-rapidM2M/rapidM2M-M2/blob/master/Examples/rapidM2M_Base_Starter/Basic_Examples_Collection/80_GNSS_NMEA_0.p)** <br/>
+*Simple "GNSS NMEA" Example* <br/>
+Receives "GNSS" data of format "NMEA" via UART interface. <br/>
+* **[80_GNSS_NMEA_system_0.p](https://github.com/Microtronics-rapidM2M/rapidM2M-M2/blob/master/Examples/rapidM2M_Base_Starter/Basic_Examples_Collection/80_GNSS_NMEA_system_0.p)** <br/>
+*Simple "GNSS NMEA" Example* <br/>
+Example on how to decode GNSS NMEA frames with sentence identifier "GGA" by using rM2M system integrated functions. <br/>
 * **[Alarm.inc](https://github.com/Microtronics-rapidM2M/rapidM2M-M2/blob/master/Examples/rapidM2M_Base_Starter/Basic_Examples_Collection/Alarm.inc)** <br/>
 *Alarm interface functions* <br/>
 Provides generic functions and constants for alarm implementation. <br/>
+* **[gnss.inc](https://github.com/Microtronics-rapidM2M/rapidM2M-M2/blob/master/Examples/rapidM2M_Base_Starter/Basic_Examples_Collection/gnss.inc)** <br/>
+*GNSS interface functions* <br/>
+This header file can be used to handle received GNSS data based on NMEA format received from any external GNSS receiver module that is connected to one of the UART peripheral interfaces.<br/>
 * **[lis3dsh.inc](https://github.com/Microtronics-rapidM2M/rapidM2M-M2/blob/master/Examples/rapidM2M_Base_Starter/Basic_Examples_Collection/lis3dsh.inc)** <br/>
 *LIS3DSH interface functions* <br/>
 * **[sht31.inc](https://github.com/Microtronics-rapidM2M/rapidM2M-M2/blob/master/Examples/rapidM2M_Base_Starter/Basic_Examples_Collection/sht31.inc)** <br/>
@@ -178,27 +187,28 @@ The TMP112 is a high-accuracy digital temperature sensor. It is highly linear an
 
 Click on the name of the function to view in which example it is used.
 
-### [Timer, date & time](http://support.microtronics.com/Developer_Documentation/Content/Developer_Documentation/sw/Pawn_rM2M_Time.htm)
+### [Timer, date & time](https://support.microtronics.com/Developer_Documentation/Content/Developer_Documentation/sw/Pawn_rM2M_Time.htm)
 
 <details>
-<summary>**rM2M_GetTime(&hour=0, &minute=0, &second=0, timestamp=0)**</summary>
+<summary>rM2M_GetTime(&hour=0, &minute=0, &second=0, timestamp=0)</summary>
 + 50_filetransfer_send.p <br/>
 + 50_filetransfer_send_multiple.p <br/>
 </details>
 
 <details>
-<summary>**rM2M_GetDate(&year=0, &month=0, &day=0, timestamp=0)**</summary>
+<summary>rM2M_GetDate(&year=0, &month=0, &day=0, timestamp=0)</summary>
++ 50_filetransfer_send.p <br/>
+</details>
+
+<details>
+<summary>rM2M_GetDateTime(datetime[TrM2M_DateTime])</summary>
 + 00_common_7_conditional.p <br/>
 </details>
 
 <details>
-<summary>**rM2M_GetDateTime(datetime[TrM2M_DateTime])**</summary>
-+ 00_common_7_conditional.p <br/>
-</details>
-
-<details>
-<summary>**rM2M_TimerAdd(funcidx)**</summary>
+<summary>rM2M_TimerAdd(funcidx)</summary>
 + 00_common_1_Timer_1.p<br/> 
++ 00_common_1_Timer_2.p<br/> 
 + 10_Switch_Long.p<br/>  
 + 11_Led_2.p<br/>  
 + 11_Led_2_3.p<br/>  
@@ -208,6 +218,7 @@ Click on the name of the function to view in which example it is used.
 + 12_Transmission_2_cyclic_connection.p<br/>  
 + 12_Transmission_3_ForceOnline.p<br/>  
 + 13_Transmission_Led_1.p<br/>  
++ 13_Transmission_Led_2.p<br/>  
 + 13_Transmission_Status_Led_0.p<br/>  
 + 13_Transmission_Status_Led_1.p<br/> 
 + 13_Transmission_Status_Led_2.p<br/> 
@@ -223,9 +234,11 @@ Click on the name of the function to view in which example it is used.
 + 31_i2c_tmp112_1.p<br/>
 + 31_i2c_tmp112_2.p<br/>
 + 40_i2c_sht31.p<br/>  
++ 50_filetransfer_receive.p <br/>
 + 50_filetransfer_send_multiple.p <br/>
 + 50_spi.p<br/>  
 + 50_spi_winkel.p<br/>  
++ 60_statemachine_0.p<br/>  
 + 60_statemachine_1.p<br/>  
 + 60_statemachine_2.p<br/>  
 + 61_alarm_1.p<br/>  
@@ -233,16 +246,17 @@ Click on the name of the function to view in which example it is used.
 + 61_alarm_3.p<br/>
 + 70_wifi_scan.p<br/>  
 + 70_wifi_scan_devinfo.p<br/>  
++ 80_GNSS_NMEA_0.p<br/>  
++ 80_GNSS_NMEA_system_0.p<br/>  
 </details>
 
-
 <details>
-<summary>**rM2M_TimerRemove(funcidx)**</summary>
+<summary>rM2M_TimerRemove(funcidx)</summary>
 + 10_Switch_Long.p<br/>
 </details>
 
 <details>
-<summary>**rM2M_TimerAddExt(funcidx, bool:cyclic, time)**</summary>
+<summary>rM2M_TimerAddExt(funcidx, bool:cyclic, time)</summary>
 + 00_common_1_Timer_1.p<br/>
 + 00_common_1_Timer_2.p<br/>  
 + 10_Switch_Long.p<br/>
@@ -259,17 +273,19 @@ Click on the name of the function to view in which example it is used.
 + 50_spi.p<br/>
 + 50_spi_winkel.p<br/>
 + 60_statemachine_0.p<br/>
++ 80_GNSS_NMEA_0<br/>
++ 80_GNSS_NMEA_system_0.p<br/>
 </details>
 
 <details>
-<summary>**rM2M_TimerRemoveExt(funcidx)**</summary>
+<summary>rM2M_TimerRemoveExt(funcidx)</summary>
 + 10_Switch_Long.p<br/>
 </details>
 
-### [Uplink](http://support.microtronics.com/Developer_Documentation/Content/Developer_Documentation/sw/Pawn_rM2M_Uplink.htm)
+### [Uplink](https://support.microtronics.com/Developer_Documentation/Content/Developer_Documentation/sw/Pawn_rM2M_Uplink.htm)
 
 <details>
-<summary>**rM2M_TxStart(flags=0)**</summary>
+<summary>rM2M_TxStart(flags=0)</summary>
 + 12_Transmission_0.p<br/>
 + 12_Transmission_1_uplink.p<br/>
 + 12_Transmission_2_cyclic_connection.p<br/>
@@ -289,13 +305,14 @@ Click on the name of the function to view in which example it is used.
 + 61_alarm_1.p<br/>
 + 61_alarm_2.p<br/>
 + 61_alarm_3.p<br/>
++ 80_GNSS_NMEA_system_0.p<br/>
 </details>
 
 <details>
-<summary>**rM2M_TxSetMode(mode, flags=0)**</summary>
+<summary>rM2M_TxSetMode(mode, flags=0)</summary>
 + 12_Transmission_3_ForceOnline.p<br/>
-+ 13_Transmission_Led_0.p<br/>
 + 13_Transmission_Led_1.p<br/>
++ 13_Transmission_Led_2.p<br/>
 + 13_Transmission_Status_Led_0.p<br/>
 + 13_Transmission_Status_Led_1.p<br/>
 + 13_Transmission_Status_Led_2.p<br/>
@@ -306,10 +323,11 @@ Click on the name of the function to view in which example it is used.
 + 50_filetransfer_send_multiple.p<br/>
 + 70_wifi_scan.p<br/>
 + 70_wifi_scan_devinfo.p<br/>
++ 80_GNSS_NMEA_system_0.p<br/>
 </details>
 
 <details>
-<summary>**rM2M_TxGetStatus(&errorcode=0)**</summary>
+<summary>rM2M_TxGetStatus(&errorcode=0)</summary>
 + 12_Transmission_3_ForceOnline.p<br/> 
 + 13_Transmission_Led_1.p<br/>
 + 13_Transmission_Led_2.p<br/>
@@ -319,7 +337,7 @@ Click on the name of the function to view in which example it is used.
 </details>
 
 <details>
-<summary>**rM2M_TxSelectItf(itf)**</summary>
+<summary>rM2M_TxSelectItf(itf)</summary>
 + 12_Transmission_1_uplink.p<br/>
 + 13_Transmission_Led_1.p<br/>
 + 13_Transmission_Led_2.p<br/>
@@ -330,7 +348,7 @@ Click on the name of the function to view in which example it is used.
 </details>
 
 <details>
-<summary>**rM2M_RecData(timestamp, const data{}, len)**</summary>
+<summary>rM2M_RecData(timestamp, const data{}, len)</summary>
 + 30_System_Values_1.p<br/>
 + 30_System_Values_2.p<br/>
 + 30_System_Values_3.p<br/>
@@ -341,11 +359,13 @@ Click on the name of the function to view in which example it is used.
 + 61_alarm_1.p<br/>
 + 61_alarm_2.p<br/>
 + 61_alarm_3.p<br/>
++ 80_GNSS_NMEA_system_0.p<br/>
 + Alarm.inc <br/>
++ gnss.inc<br/>
 </details>
 
 <details>
-<summary>**rM2M_CfgRead(cfg, pos, data{}, size)**</summary>
+<summary>rM2M_CfgRead(cfg, pos, data{}, size)</summary>
 + 30_System_Values_2.p<br/>
 + 30_System_Values_3.p<br/>
 + 31_i2c_sht21_2.p<br/>
@@ -353,60 +373,60 @@ Click on the name of the function to view in which example it is used.
 </details>
 
 <details>
-<summary>**rM2M_CfgOnChg(funcidx)**</summary>
+<summary>rM2M_CfgOnChg(funcidx)</summary>
 + 30_System_Values_2.p<br/>
 + 30_System_Values_3.p<br/>
 + 31_i2c_sht21_2.p<br/>
 + 31_i2c_tmp112_2.p<br/>
 </details>
 
-### [WiFi](http://support.microtronics.com/Developer_Documentation/Content/Developer_Documentation/sw/Pawn_rM2M_WiFi.htm)
+### [WiFi](https://support.microtronics.com/Developer_Documentation/Content/Developer_Documentation/sw/rapidM2M_M22x_WIFI_xG_xx_WiFi.htm)
 <details>
-<summary>**WiFi_Init(funcidx)**</summary>
+<summary>WiFi_Init(funcidx)</summary>
 + 70_wifi_scan.p<br/>
 + 70_wifi_scan_devinfo.p<br/>
 </details>
 
 <details>
-<summary>**WiFi_GetState()**</summary>
+<summary>WiFi_GetState()</summary>
 + 70_wifi_scan.p<br/>
 + 70_wifi_scan_devinfo.p<br/>
 </details>
 
 <details>
-<summary>**WiFi_Scan()**</summary>
+<summary>WiFi_Scan()</summary>
 + 70_wifi_scan.p<br/>
 + 70_wifi_scan_devinfo.p<br/>
 </details>
 
-### [System](http://support.microtronics.com/Developer_Documentation/Content/Developer_Documentation/sw/Pawn_rM2M_System.htm)
+### [System](https://support.microtronics.com/Developer_Documentation/Content/Developer_Documentation/sw/rapidM2M_M22x_System.htm)
 
 <details>
-<summary>**Mx_GetSysValues(values[TMx_SysValue], len=sizeof values)**</summary>
+<summary>Mx_GetSysValues(values[TMx_SysValue], len=sizeof values)</summary>
 + 30_System_Values_0.p<br/>
 + 30_System_Values_1.p<br/>
 + 30_System_Values_2.p<br/>
 + 30_System_Values_3.p<br/>
 </details>
 
-### [Encoding](http://support.microtronics.com/Developer_Documentation/Content/Developer_Documentation/sw/Pawn_rM2M_Encoding.htm)
+### [Encoding](https://support.microtronics.com/Developer_Documentation/Content/Developer_Documentation/sw/Pawn_rM2M_Encoding.htm)
 
 <details>
-<summary>**rM2M_SetPackedB(data{}, pos, const block[], size)**</summary>
+<summary>rM2M_SetPackedB(data{}, pos, const block[], size)</summary>
 + 50_filetransfer_receive.p <br/>
 + 50_filetransfer_send.p<br/>
 + 50_filetransfer_send_multiple.p<br/>
 </details>
 
 <details>
-<summary>**rM2M_GetPackedB(const data{}, pos, block[], size)**</summary>
+<summary>rM2M_GetPackedB(const data{}, pos, block[], size)</summary>
 + 50_filetransfer_receive.p <br/>
 + 70_wifi_scan.p<br/>
 + 70_wifi_scan_devinfo.p<br/>
 </details>
 
 <details>
-<summary>**rM2M_Pack(const data{}, pos, &{Float,Fixed,_}:value, type)**</summary>
+<summary>rM2M_Pack(const data{}, pos, &{Float,Fixed,_}:value, type)</summary>
 + 00_common_4_pack.p <br/> 
 + 30_System_Values_1.p<br/>
 + 30_System_Values_2.p<br/>
@@ -421,12 +441,16 @@ Click on the name of the function to view in which example it is used.
 + 61_alarm_3.p<br/>
 + 70_wifi_scan.p<br/>
 + 70_wifi_scan_devinfo.p<br/>
++ 80_GNSS_NMEA_system_0.p<br/>
 + lis3dsh.inc<br/>
++ sht21.inc <br/>
++ sht31.inc <br/>
++ tmp112.inc <br/>
 </details>
 
-### [GPIO, IRQ](http://support.microtronics.com/Developer_Documentation/Content/Developer_Documentation/sw/Pawn_rM2M_GPIO_IRQ.htm)
+### [GPIO, IRQ](https://support.microtronics.com/Developer_Documentation/Content/Developer_Documentation/sw/Pawn_rM2M_GPIO_IRQ.htm)
 <details>
-<summary>**rM2M_GpioDir(gpio, dir)**</summary>
+<summary>rM2M_GpioDir(gpio, dir)</summary>
 + 11_Led_2.p<br/>
 + 11_Led_2_3.p<br/>
 + 11_Led_rgb_v1.p<br/>
@@ -446,7 +470,7 @@ Click on the name of the function to view in which example it is used.
 </details>
 
 <details>
-<summary>**rM2M_GpioSet(gpio, level)**</summary>
+<summary>rM2M_GpioSet(gpio, level)</summary>
 + 11_Led_2.p<br/>
 + 11_Led_2_3.p<br/>
 + 11_Led_rgb_v1.p<br/>
@@ -466,7 +490,7 @@ Click on the name of the function to view in which example it is used.
 </details>
 
 <details>
-<summary>**rM2M_IrqInit(irq, config, funcidx)**</summary>
+<summary>rM2M_IrqInit(irq, config, funcidx)</summary>
 + 10_Switch.p<br/>
 + 10_Switch_Long.p<br/> 
 + 11_Status_Led_and_Button(Irq)_0.p <br/>
@@ -474,33 +498,33 @@ Click on the name of the function to view in which example it is used.
 </details>
 
 <details>
-<summary>**rM2M_IrqClose(irq)**</summary>
+<summary>rM2M_IrqClose(irq)</summary>
 + 10_Switch.p<br/>
 + 10_Switch_Long.p<br/> 
 + 11_Status_Led_and_Button(Irq)_0.p <br/>
 + 11_Status_Led_and_Button(Irq)_1.p <br/>
 </details>
 
-### [SPI, I2C, UART](http://support.microtronics.com/Developer_Documentation/Content/Developer_Documentation/sw/Pawn_rM2M_SPI_I2C_UART.htm)
+### [SPI, I2C, UART](https://support.microtronics.com/Developer_Documentation/Content/Developer_Documentation/sw/Pawn_rM2M_SPI_I2C_UART.htm)
 <details>
-<summary>**rM2M_SpiInit(spi, clock, config)**</summary>
+<summary>rM2M_SpiInit(spi, clock, config)</summary>
 + 50_spi.p<br/>
 + 50_spi_winkel.p<br/>
 </details>
 
 <details>
-<summary>**rM2M_SpiClose(spi)**</summary>
+<summary>rM2M_SpiClose(spi)</summary>
 + 50_spi.p<br/>
 + 50_spi_winkel.p<br/>
 </details>
 
 <details>
-<summary>**rM2M_SpiCom(spi, data{}, txlen, rxlen)**</summary>
+<summary>rM2M_SpiCom(spi, data{}, txlen, rxlen)</summary>
 + lis3dsh.inc<br/>
 </details>
 
 <details>
-<summary>**rM2M_I2cInit(i2c, clock, config)**</summary>
+<summary>rM2M_I2cInit(i2c, clock, config)</summary>
 + 40_i2c_sht31.p<br/>
 + 31_i2c_sht21_0.p<br/>
 + 31_i2c_sht21_1.p<br/>
@@ -511,27 +535,36 @@ Click on the name of the function to view in which example it is used.
 </details>
 
 <details>
-<summary>**rM2M_I2cClose(i2c)**</summary>
+<summary>rM2M_I2cClose(i2c)</summary>
 + 40_i2c_sht31.p<br/>
 </details>
 
 <details>
-<summary>**rM2M_I2cCom(i2c, adr, data{}, txlen, rxlen)**</summary>
+<summary>rM2M_I2cCom(i2c, adr, data{}, txlen, rxlen)</summary>
++ sht21.inc<br/>
 + sht31.inc<br/>
++ tmp112.inc<br/>
 </details>
 
 <details>
-<summary>**rM2M_UartInit(uart, baudrate, mode, funcidx)**</summary>
+<summary>rM2M_UartInit(uart, baudrate, mode, funcidx)</summary>
 + 20_rs232_1.p<br/>
 + 20_rs232_2.p<br/>
 + 20_rs232_3.p<br/>
 + 20_rs232_4.p<br/>
 + 50_filetransfer_receive.p<br/>
 + 50_filetransfer_send.p<br/>
++ 80_GNSS_NMEA_system_0.p <br/>
++ gnss.inc <br/>
 </details>
 
 <details>
-<summary>**rM2M_UartWrite(uart, const data{}, len)**</summary>
+<summary> rM2M_UartClose(uart)</summary>
++ gnss.inc<br/>
+</details>
+
+<details>
+<summary>rM2M_UartWrite(uart, const data{}, len)</summary>
 + 20_rs232_1.p<br/>
 + 20_rs232_2.p<br/>
 + 20_rs232_3.p<br/>
@@ -539,54 +572,77 @@ Click on the name of the function to view in which example it is used.
 + 50_filetransfer_receive.p<br/>
 </details>
 
-### [Registry](http://support.microtronics.com/Developer_Documentation/Content/Developer_Documentation/sw/Pawn_rM2M_Registry.htm)
+### [Registry](https://support.microtronics.com/Developer_Documentation/Content/Developer_Documentation/sw/Pawn_rM2M_Registry.htm)
 
 <details>
-<summary>**rM2M_RegSetString(reg, const name[], const string[])**</summary>
+<summary>rM2M_RegSetString(reg, const name[], const string[])</summary>
 + 12_Transmission_1_uplink.p<br/>
 </details>
 
-### [Char & String](http://support.microtronics.com/Developer_Documentation/Content/Developer_Documentation/sw/Pawn_Erweiterungen_String_Funktionen.htm)
+### [Position](https://support.microtronics.com/Developer_Documentation/Content/Developer_Documentation/sw/Pawn_rM2M_POS.htm)
+
 <details>
-<summary>**strlen(const string[])**</summary>
+<summary>rM2M_DecodeNMEA(const sentence{}, data[], len=sizeof data)</summary>
++ 80_GNSS_NMEA_system_0.p <br/>
+</details>
+
+### [Char & String](https://support.microtronics.com/Developer_Documentation/Content/Developer_Documentation/sw/Pawn_Erweiterungen_String_Funktionen.htm)
+<details>
+<summary>strlen(const string[])</summary>
 + 50_filetransfer_send_multiple.p<br/>
++ gnss.inc<br/>
 </details>
 
 <details>
-<summary>**sprintf(dest[], maxlength=sizeof dest, const format[], {Float,Fixed,_}:...)**</summary>
+<summary>sprintf(dest[], maxlength=sizeof dest, const format[], {Float,Fixed,_}:...)</summary>
 + 20_rs232_2.p<br/>
 + 20_rs232_3.p<br/>
 + 20_rs232_4.p<br/>
 + 50_filetransfer_send.p<br/>
++ gnss.inc<br/>
 </details>
 
 <details>
-<summary>**strcmp(const string1[], const string2[], length=cellmax)**</summary>
+<summary>strcmp(const string1[], const string2[], length=cellmax)</summary>
 + 20_rs232_3.p<br/>
 + 20_rs232_4.p<br/>
-</details>
-
-### [Various](http://support.microtronics.com/Developer_Documentation/Content/Developer_Documentation/sw/Pawn_Erweiterungen_Hilfsfunktionen.htm)
-
-<details>
-<summary>**getapilevel()**</summary>
-+ 00_common_2_get_module_info.p<br/>
++ 80_GNSS_NMEA_0.p <br/>
++ 80_GNSS_NMEA_system_0.p <br/>
 </details>
 
 <details>
-<summary>**CRC32(data{}, len, initial=0)**</summary>
+<summary>strtol(const string[], base)</summary>
++ gnss.inc<br/>
+</details>
+
+<details>
+<summary>Float: atof(const string[])</summary>
++ gnss.inc<br/>
+</details>
+
+### [CRC & Hash] (https://support.microtronics.com/Developer_Documentation/Content/Developer_Documentation/sw/Pawn_rM2M_CRC_HASH.htm)
+
+<details>
+<summary>CRC32(data{}, len, initial=0)</summary>
 + 50_filetransfer_receive.p <br/>
 + 50_filetransfer_send.p<br/>
 + 50_filetransfer_send_multiple.p<br/>
 </details>
 
+### [Various](https://support.microtronics.com/Developer_Documentation/Content/Developer_Documentation/sw/Pawn_Erweiterungen_Hilfsfunktionen.htm)
+
 <details>
-<summary>**rM2M_GetId(id[TrM2M_Id], len=sizeof id)**</summary>
+<summary>getapilevel()</summary>
 + 00_common_2_get_module_info.p<br/>
 </details>
 
 <details>
-<summary>**funcidx(const name[])**</summary>
+<summary>rM2M_GetId(id[TrM2M_Id], len=sizeof id)</summary>
++ 00_common_2_get_module_info.p<br/>
+</details>
+
+<details>
+<summary>funcidx(const name[])</summary>
 + 00_common_1_Timer_1.p<br/>
 + 00_common_1_Timer_2.p<br/> 
 + 10_Switch.p<br/>
@@ -633,12 +689,15 @@ Click on the name of the function to view in which example it is used.
 + 61_alarm_3.p<br/>
 + 70_wifi_scan.p<br/>
 + 70_wifi_scan_devinfo.p<br/>
++ 80_GNSS_NMEA_0.p <br/>
++ 80_GNSS_NMEA_system_0.p <br/>
++ gnss.inc </br>
 </details>
 
-### [Console](http://support.microtronics.com/Developer_Documentation/Content/Developer_Documentation/sw/Pawn_Erweiterungen_Consolen_Funktionen.htm)
+### [Console](https://support.microtronics.com/Developer_Documentation/Content/Developer_Documentation/sw/Pawn_Erweiterungen_Consolen_Funktionen.htm)
 
 <details>
-<summary>**print(const string[])**</summary>
+<summary>print(const string[])</summary>
 + 00_common_0_Main.p<br/>
 + 00_common_7_conditional.p<br/>
 + 00_common_8_loop.p<br/>
@@ -665,11 +724,13 @@ Click on the name of the function to view in which example it is used.
 + 61_alarm_3.p<br/>
 + 70_wifi_scan.p<br/>
 + 70_wifi_scan_devinfo.p<br/>
++ 80_GNSS_NMEA_system_0.p <br/>
++ gnss.inc </br>
 + sht31.inc<br/>
 </details>
 
 <details>
-<summary>**printf(const format[], {Float,Fixed,_}:...)**</summary>
+<summary>printf(const format[], {Float,Fixed,_}:...)</summary>
 + 00_common_1_Timer_1.p<br/>
 + 00_common_1_Timer_2.p<br/> 
 + 00_common_2_get_module_info.p<br/>
@@ -704,8 +765,9 @@ Click on the name of the function to view in which example it is used.
 + 30_System_Values_1.p<br/>
 + 30_System_Values_2.p<br/>
 + 30_System_Values_3.p<br/>
++ 31_i2c_sht21_0.p<br/>
 + 31_i2c_sht21_1.p<br/>
-+ 31_i2c_sht21_2.p  <br/>
++ 31_i2c_sht21_2.p<br/>
 + 31_i2c_tmp112_0.p<br/>
 + 31_i2c_tmp112_1.p<br/>
 + 31_i2c_tmp112_2.p<br/>
@@ -723,49 +785,57 @@ Click on the name of the function to view in which example it is used.
 + 61_alarm_3.p<br/>
 + 70_wifi_scan.p<br/>
 + 70_wifi_scan_devinfo.p<br/>
-+ lis3dsh.inc<br/>
++ 80_GNSS_NMEA_0.p <br/>
++ 80_GNSS_NMEA_system_0.p <br/>
++ gnss.inc </br>
++ sht21.inc<br/>
 + sht31.inc<br/>
+</details>
+
+<details>
+<summary>setbuf(buf{}, size)</summary>
++ 80_GNSS_NMEA_0.p<br/>
 </details>
 
 ### [File Transfer](https://support.microtronics.com/Developer_Documentation/Content/Developer_Documentation/sw/Pawn_Erweiterungen_File_Transfer_Funktionen.htm)
 
 <details>
-<summary>**FT_Register(const name{}, id, funcidx)**</summary>
+<summary>FT_Register(const name{}, id, funcidx)</summary>
 + 50_filetransfer_receive.p <br/>
 + 50_filetransfer_send.p<br/>
 + 50_filetransfer_send_multiple.p<br/>
 </details>
 
 <details>
-<summary>**FT_Unregister(id)**</summary>
+<summary>FT_Unregister(id)</summary>
 + 50_filetransfer_send.p<br/>
 </details>
 
 <details>
-<summary>**FT_SetPropsExt(id, props[TFT_Info], len=sizeof props)**</summary>
+<summary>FT_SetPropsExt(id, props[TFT_Info], len=sizeof props)</summary>
 + 50_filetransfer_receive.p <br/>
 + 50_filetransfer_send.p<br/>
 + 50_filetransfer_send_multiple.p<br/>
 </details>
 
 <details>
-<summary>**FT_Read(id, const data{}, len)**</summary>
+<summary>FT_Read(id, const data{}, len)</summary>
 + 50_filetransfer_send.p<br/>
 + 50_filetransfer_send_multiple.p<br/>
 </details>
 
 <details>
-<summary>**FT_Accept(id, newid=-1)**</summary>
+<summary>FT_Accept(id, newid=-1)</summary>
 + 50_filetransfer_receive.p <br/>
 </details>
 
 <details>
-<summary>**FT_Written(id, len)**</summary>
+<summary>FT_Written(id, len)</summary>
 + 50_filetransfer_receive.p <br/>
 </details>
 
 <details>
-<summary>**FT_Error(id)**</summary>
+<summary>FT_Error(id)</summary>
 + 50_filetransfer_receive.p <br/>
 + 50_filetransfer_send.p<br/>
 + 50_filetransfer_send_multiple.p<br/>
@@ -774,7 +844,7 @@ Click on the name of the function to view in which example it is used.
 ### [LED](https://support.microtronics.com/Developer_Documentation/Content/Developer_Documentation/sw/rapidM2M_M22x_LED.htm)
 
 <details>
-<summary>**MxLed_Init(mode)**</summary>
+<summary>MxLed_Init(mode)</summary>
 + 11_Status_Led_1.p <br/> 
 + 11_Status_Led_and_Button(Irq)_0.p <br/>   
 + 11_Status_Led_and_Button(Irq)_1.p <br/>  
@@ -785,7 +855,7 @@ Click on the name of the function to view in which example it is used.
 </details>
 
 <details>
-<summary>**MxLed_On(bool:green)**</summary>
+<summary>MxLed_On(bool:green)</summary>
 + 11_Status_Led_1.p <br/> 
 + 11_Status_Led_and_Button(Irq)_0.p <br/>   
 + 11_Status_Led_and_Button(Irq)_1.p <br/>  
@@ -795,7 +865,7 @@ Click on the name of the function to view in which example it is used.
 </details>
 
 <details>
-<summary>**MxLed_Off(bool:green)**</summary>
+<summary>MxLed_Off(bool:green)</summary>
 + 11_Status_Led_1.p <br/> 
 + 11_Status_Led_and_Button(Irq)_0.p <br/>   
 + 11_Status_Led_and_Button(Irq)_1.p <br/>  
@@ -806,7 +876,7 @@ Click on the name of the function to view in which example it is used.
 </details>
 
 <details>
-<summary>**MxLed_Blink(green)**</summary> 
+<summary>MxLed_Blink(green)</summary> 
 + 11_Status_Led_and_Button(Irq)_1.p <br/>  
 + 13_Transmission_Status_Led_0.p <br/>
 + 13_Transmission_Status_Led_1.p <br/>
@@ -815,13 +885,13 @@ Click on the name of the function to view in which example it is used.
 </details>
 
 <details>
-<summary>**MxLed_Flash(green)**</summary> 
+<summary>MxLed_Flash(green)</summary> 
 + 11_Status_Led_and_Button(Irq)_1.p <br/>  
 + 60_statemachine_0.p <br/> 
 </details>
 
 <details>
-<summary>**MxLed_Flicker(green)**</summary> 
+<summary>MxLed_Flicker(green)</summary> 
 + 11_Status_Led_and_Button(Irq)_1.p <br/>  
 + 13_Transmission_Status_Led_0.p <br/>
 + 13_Transmission_Status_Led_1.p <br/>

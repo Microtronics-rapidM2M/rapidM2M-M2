@@ -1,0 +1,51 @@
+﻿//===
+//=== Measurement Channels
+//===
+<split>
+    // Raw data channel (always "rm2mraw" for the Base Partner Board) from which the data records should be
+    // copied
+    source = rm2mraw
+    // Measurement data channel to which the data record should be copied
+    target = histdata0
+    // If the first byte of the data record corresponds to this value, it is copied to the specified 
+    // measurement data channel.
+    key    = 00
+</split>
+
+<table>
+    // Measurement data channel 0 should be used.
+    name = histdata0
+
+	 <field>
+        // Data field 0 should be used for the longitude.	 
+        name    = ch0
+        // Alternative field name that can be used by the REST-API		
+        alias   = Lon
+        // Title of the data field displayed on the server		
+        title   = Longitude
+        // Position in measurement data channel 0 where the data field is saved
+        // Note: The key for the split tag is located at position "0"		
+        byteofs = 1
+        // Data type: 32Bit unsigned		
+        type    = s32
+		// Measurement value unit displayed on the server
+		units   = °  
+        // Conversion factor i.e. 90 000 000 -> 90.000000 (0.000001° is used internally)		
+		vscale  = 0.000001
+		// Six decimal places are used
+		decpl   = 6
+    </field>
+	
+	<field>
+        // Data field 0 should be used for the latitude	
+        name    = ch1
+        alias   = Lat
+        title   = Latitude
+        byteofs = 5
+        type    = s32
+		units   = °  		
+		vscale  = 0.000001
+		decpl   = 6
+    </field>
+</table>
+
